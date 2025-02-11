@@ -8,4 +8,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get home => 'Home';
+
+  @override
+  String get importFromLibrary => 'Import from Library';
+
+  @override
+  String get playSingleStream => 'Play single stream';
+
+  @override
+  String get uploadFromFiles => 'Upload from Files';
+
+  @override
+  String get uploadM3UFile => 'Upload M3U File';
+
+  @override
+  String get inputPlaylistUrl => 'Input playlist URL';
 }

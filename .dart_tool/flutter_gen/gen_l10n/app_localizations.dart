@@ -100,6 +100,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home'**
   String get home;
+
+  /// No description provided for @importFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from Library'**
+  String get importFromLibrary;
+
+  /// No description provided for @playSingleStream.
+  ///
+  /// In en, this message translates to:
+  /// **'Play single stream'**
+  String get playSingleStream;
+
+  /// No description provided for @uploadFromFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload from Files'**
+  String get uploadFromFiles;
+
+  /// No description provided for @uploadM3UFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload M3U File'**
+  String get uploadM3UFile;
+
+  /// No description provided for @inputPlaylistUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Input playlist URL'**
+  String get inputPlaylistUrl;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

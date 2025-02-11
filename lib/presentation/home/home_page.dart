@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iptv_player/common/widgets/animated_border_fab.dart';
 import 'package:iptv_player/presentation/home/nav_bar.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -43,19 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onItemTapped: _onTapped,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: SizedBox(
-          width: 60,
-          height: 60,
-          child: FloatingActionButton(
-              onPressed: () => {},
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(40))),
-              backgroundColor: const Color(0xFF6650DD),
-              child: SvgPicture.asset(
-                'assets/icons/MaterialSymbolsAdd.svg',
-                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              )),
-        ),
+        floatingActionButton: AnimatedBorderFab(),
         resizeToAvoidBottomInset: false,
         body: _buildPageContent());
   }

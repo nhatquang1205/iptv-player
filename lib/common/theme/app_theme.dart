@@ -29,6 +29,13 @@ class ThemeSheet {
               color: palette.normalText,
             ),
           ),
+          primaryTextTheme: TextTheme(
+            headlineSmall: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: palette.primaryText,
+            ),
+          ),
           extensions: [palette],
         );
 }

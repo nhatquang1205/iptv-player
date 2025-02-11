@@ -1,3 +1,8 @@
 {
-    "home": "Home"
+    "home": "Home",
+    "importFromLibrary": "Import from Library",
+    "playSingleStream": "Play single stream",
+    "uploadFromFiles": "Upload from Files",
+    "uploadM3UFile": "Upload M3U File",
+    "inputPlaylistUrl": "Input playlist URL"
 }

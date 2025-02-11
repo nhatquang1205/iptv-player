@@ -8,4 +8,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get home => 'Trang chủ';
+
+  @override
+  String get importFromLibrary => 'Nhập từ Thư viện ảnh';
+
+  @override
+  String get playSingleStream => 'Phát một luồng duy nhất';
+
+  @override
+  String get uploadFromFiles => 'Tải lên từ thiết bị';
+
+  @override
+  String get uploadM3UFile => 'Tải lên file M3U';
+
+  @override
+  String get inputPlaylistUrl => 'Nhập URL danh sách phát';
 }

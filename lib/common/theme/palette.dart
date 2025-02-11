@@ -17,6 +17,8 @@ class Palette extends ThemeExtension<Palette> {
 
   final Color focusedBorderColor;
 
+  final Color primaryText;
+
   const Palette({
     required this.brightness,
     required this.scaffoldBackground,
@@ -27,6 +29,7 @@ class Palette extends ThemeExtension<Palette> {
     required this.errorButtonLabel,
     required this.dialogBackground,
     required this.focusedBorderColor,
+    required this.primaryText,
     this.buttonText = const Color(0xFFF7F7FC),
     this.hintTextField = const Color(0xFFADB5BD),
   });
@@ -43,6 +46,7 @@ class Palette extends ThemeExtension<Palette> {
       errorButtonLabel: Color(0xFFFF3333),
       dialogBackground: Color(0xFFFFFFFF),
       focusedBorderColor: Color(0xFF002DE3),
+      primaryText: Color(0xFF002DE3),
     );
   }
 
@@ -57,6 +61,7 @@ class Palette extends ThemeExtension<Palette> {
       errorButtonLabel: Color(0xFFF0424B),
       dialogBackground: Color(0xFF343839),
       focusedBorderColor: Color(0xFF375FFF),
+      primaryText: Color(0xFF002DE3),
     );
   }
 
@@ -72,6 +77,7 @@ class Palette extends ThemeExtension<Palette> {
     Color? errorButtonLabel,
     Color? dialogBackground,
     Color? focusedBorderColor,
+    Color? primaryText,
   }) {
     return Palette(
       brightness: brightness ?? this.brightness,
@@ -85,6 +91,7 @@ class Palette extends ThemeExtension<Palette> {
       errorButtonLabel: errorButtonLabel ?? this.errorButtonLabel,
       dialogBackground: dialogBackground ?? this.dialogBackground,
       focusedBorderColor: focusedBorderColor ?? this.focusedBorderColor,
+      primaryText: primaryText ?? this.primaryText,
     );
   }
 
@@ -113,6 +120,7 @@ class Palette extends ThemeExtension<Palette> {
           Color.lerp(dialogBackground, other.dialogBackground, t)!,
       focusedBorderColor:
           Color.lerp(focusedBorderColor, other.focusedBorderColor, t)!,
+      primaryText: Color.lerp(primaryText, other.primaryText, t)!,
     );
   }
 }
