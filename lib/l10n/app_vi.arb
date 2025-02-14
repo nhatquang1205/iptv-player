@@ -1,8 +1,24 @@
 {
     "home": "Trang chủ",
+    "channels": "Kênh",
+    "xtream": "XTream",
+    "settings": "Cài đặt",
     "importFromLibrary": "Nhập từ Thư viện ảnh",
     "playSingleStream": "Phát một luồng duy nhất",
     "uploadFromFiles": "Tải lên từ thiết bị",
     "uploadM3UFile": "Tải lên file M3U",
-    "inputPlaylistUrl": "Nhập URL danh sách phát"
+    "inputPlaylistUrl": "Nhập URL danh sách phát",
+    "cancel": "Huỷ",
+    "save": "Lưu",
+    "uploadVideo": "Chọn video",
+    "uploadFile": "Tải lên file",
+    "playlistName": "Tên danh sách phát",
+    "protectByPasscode": "Bảo vệ bằng mật mã",
+    "urlPlaylist": "URL danh sách phát",
+    "numbersOfFileSelected": "{fileCount} đã chọn",
+    "channelCount": "{channelCount} kênh",
+    "all": "Tất cả",
+    "url": "Url",
+    "files": "Tệp",
+    "gallery": "Videos"
 }

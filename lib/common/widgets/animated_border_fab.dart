@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:iptv_player/presentation/home/add_playlist_menu.dart';
 
 class AnimatedBorderFab extends StatefulWidget {
   @override
@@ -30,12 +30,12 @@ class _AnimatedBorderFabState extends State<AnimatedBorderFab>
           padding: const EdgeInsets.all(3), // Border thickness
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: SweepGradient(
+            gradient: LinearGradient(
               colors: [
                 Color.fromRGBO(2, 233, 243, 1), // Custom Color
                 Color.fromRGBO(0, 102, 255, 1),
               ],
-              stops: const [1, 1],
+              stops: const [0.5, 1],
               transform: GradientRotation(_controller.value * 2 * pi),
             ),
           ),
@@ -56,56 +56,7 @@ class _AnimatedBorderFabState extends State<AnimatedBorderFab>
                   showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
-                        return SizedBox(
-                            height: 300,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    leading: Icon(Icons.link),
-                                    title: Text(AppLocalizations.of(context)!
-                                        .inputPlaylistUrl),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ListTile(
-                                    leading: Icon(Icons.upload),
-                                    title: Text(AppLocalizations.of(context)!
-                                        .uploadM3UFile),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ListTile(
-                                    leading: Icon(Icons.folder),
-                                    title: Text(AppLocalizations.of(context)!
-                                        .uploadFromFiles),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ListTile(
-                                    leading: Icon(Icons.folder),
-                                    title: Text(AppLocalizations.of(context)!
-                                        .playSingleStream),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ListTile(
-                                    leading: Icon(Icons.add),
-                                    title: Text(AppLocalizations.of(context)!
-                                        .importFromLibrary),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ));
+                        return AddPlaylistMenu();
                       });
                 },
                 backgroundColor: Colors.transparent, // Important!

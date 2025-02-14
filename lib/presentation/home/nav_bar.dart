@@ -18,11 +18,11 @@ class NavBar extends StatelessWidget {
     return AnimatedBottomNavigationBar.builder(
       height: 96,
       itemCount: 4,
+      gapWidth: 70,
       tabBuilder: (int index, bool isActive) {
         return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Container(
-                child: Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SvgPicture.asset(
@@ -36,14 +36,14 @@ class NavBar extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  NavBarIconConstants.iconLabels[index],
+                  NavBarIconConstants.getLocalizeLabel(index, context),
                   style: TextStyle(
                     color: isActive ? Colors.blueAccent : Colors.grey,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
-            )));
+            ));
       },
       activeIndex: selectedIndex,
       onTap: onItemTapped,

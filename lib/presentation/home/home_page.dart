@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iptv_player/common/widgets/animated_border_fab.dart';
+import 'package:iptv_player/data/repositories/playlist_repository.dart';
 import 'package:iptv_player/presentation/home/nav_bar.dart';
+import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
+import 'package:iptv_player/presentation/playlists/views/list_playlists.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -21,10 +25,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Widget _buildPageContent() {
+  Widget _buildPageContent(context) {
     switch (_selectedIndex) {
       case 0:
-        return const Center(child: Text('Home Page'));
+        return Theme(
+            data: Theme.of(context),
+            child: BlocProvider<PlaylistBloc>(
+              create: (_) =>
+                  PlaylistBloc(playlistRepository: PlaylistRepository()),
+              child: ListPlaylistsPage(),
+            ));
       case 1:
         return const Center(child: Text('Channel Page'));
       case 2:
@@ -38,14 +48,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        bottomNavigationBar: NavBar(
-          selectedIndex: _selectedIndex,
-          onItemTapped: _onTapped,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: AnimatedBorderFab(),
-        resizeToAvoidBottomInset: false,
-        body: _buildPageContent());
+    return Theme(
+        data: Theme.of(context),
+        child: Scaffold(
+            bottomNavigationBar: NavBar(
+              selectedIndex: _selectedIndex,
+              onItemTapped: _onTapped,
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: AnimatedBorderFab(),
+            resizeToAvoidBottomInset: false,
+            body: _buildPageContent(context)));
   }
 }

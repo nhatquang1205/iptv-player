@@ -101,6 +101,24 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get home;
 
+  /// No description provided for @channels.
+  ///
+  /// In en, this message translates to:
+  /// **'Channels'**
+  String get channels;
+
+  /// No description provided for @xtream.
+  ///
+  /// In en, this message translates to:
+  /// **'XTream'**
+  String get xtream;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
   /// No description provided for @importFromLibrary.
   ///
   /// In en, this message translates to:
@@ -130,6 +148,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Input playlist URL'**
   String get inputPlaylistUrl;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @uploadVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload videos'**
+  String get uploadVideo;
+
+  /// No description provided for @uploadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload files'**
+  String get uploadFile;
+
+  /// No description provided for @playlistName.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist name'**
+  String get playlistName;
+
+  /// No description provided for @protectByPasscode.
+  ///
+  /// In en, this message translates to:
+  /// **'Protect by passcode'**
+  String get protectByPasscode;
+
+  /// No description provided for @urlPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist URL'**
+  String get urlPlaylist;
+
+  /// No description provided for @numbersOfFileSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{fileCount, plural, one {1 file} other {{fileCount} files}} selected'**
+  String numbersOfFileSelected(num fileCount);
+
+  /// No description provided for @channelCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{channelCount, plural, one {1 channel} other {{channelCount} channels}}'**
+  String channelCount(num channelCount);
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'Tất cả'**
+  String get all;
+
+  /// No description provided for @url.
+  ///
+  /// In en, this message translates to:
+  /// **'Url'**
+  String get url;
+
+  /// No description provided for @files.
+  ///
+  /// In en, this message translates to:
+  /// **'Files'**
+  String get files;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

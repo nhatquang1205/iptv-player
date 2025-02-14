@@ -1,8 +1,24 @@
 {
     "home": "Home",
+    "channels": "Channels",
+    "xtream": "XTream",
+    "settings": "Settings",
     "importFromLibrary": "Import from Library",
     "playSingleStream": "Play single stream",
     "uploadFromFiles": "Upload from Files",
     "uploadM3UFile": "Upload M3U File",
-    "inputPlaylistUrl": "Input playlist URL"
+    "inputPlaylistUrl": "Input playlist URL",
+    "cancel": "Cancel",
+    "save": "Save",
+    "uploadVideo": "Upload videos",
+    "uploadFile": "Upload files",
+    "playlistName": "Playlist name",
+    "protectByPasscode": "Protect by passcode",
+    "urlPlaylist": "Playlist URL",
+    "numbersOfFileSelected": "{fileCount, plural, one {1 file} other {{fileCount} files}} selected",
+    "channelCount": "{channelCount, plural, one {1 channel} other {{channelCount} channels}}",
+    "all": "Tất cả",
+    "url": "Url",
+    "files": "Files",
+    "gallery": "Gallery"
 }

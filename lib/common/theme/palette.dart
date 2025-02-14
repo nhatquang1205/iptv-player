@@ -40,13 +40,13 @@ class Palette extends ThemeExtension<Palette> {
       scaffoldBackground: Color(0xFFFFFFFF),
       buttonText: Color(0xFFFFFFFF),
       buttonBackground: Color(0xFFB7B8C5),
-      selectedButtonBackground: Color(0xFF193A4A),
+      selectedButtonBackground: Color.fromRGBO(0, 102, 255, 1),
       normalText: Color(0xFF0F1828),
       textFieldBackground: Color.fromARGB(255, 178, 178, 178),
       errorButtonLabel: Color(0xFFFF3333),
       dialogBackground: Color(0xFFFFFFFF),
       focusedBorderColor: Color(0xFF002DE3),
-      primaryText: Color(0xFF002DE3),
+      primaryText: Color.fromRGBO(0, 102, 255, 1),
     );
   }
 

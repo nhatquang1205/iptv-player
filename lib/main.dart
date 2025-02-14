@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:iptv_player/common/helpers/db_helper.dart';
 import 'package:iptv_player/common/theme/app_theme.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DBHelper db = DBHelper.instance;
+  await db.initDB();
   runApp(const MyApp());
 }
 
@@ -16,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'IPTV Player',
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       theme: themes[ThemeMode.light]!.themeData,
       darkTheme: themes[ThemeMode.dark]!.themeData,
       debugShowCheckedModeBanner: false,

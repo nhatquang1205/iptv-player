@@ -22,20 +22,25 @@ class ThemeSheet {
           brightness: palette.brightness,
           fontFamily: FontFamily.mulish,
           scaffoldBackgroundColor: palette.scaffoldBackground,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: palette.primaryText, // Primary color
+              brightness: palette.brightness,
+              primary: palette.primaryText,
+              onPrimary: palette.primaryText,
+              surface: palette.selectedButtonBackground,
+              onSurface: palette.selectedButtonBackground),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: palette.primaryText, // Button text color
+            ),
+          ),
           textTheme: TextTheme(
-            headlineSmall: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: palette.normalText,
-            ),
+            bodyLarge:
+                TextStyle(color: palette.normalText), // Default for normal text
+            bodyMedium: TextStyle(color: palette.normalText),
+            titleLarge: TextStyle(color: palette.primaryText), // Titles
           ),
-          primaryTextTheme: TextTheme(
-            headlineSmall: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: palette.primaryText,
-            ),
-          ),
+          primaryColor: palette.primaryText,
           extensions: [palette],
         );
 }
