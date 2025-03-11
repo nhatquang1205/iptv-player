@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iptv_player/common/constants/constants.dart';
+import 'package:iptv_player/data/models/playlist.dart';
+import 'package:iptv_player/data/repositories/channel_repository.dart';
+import 'package:iptv_player/data/repositories/playlist_repository.dart';
+import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
+import 'package:iptv_player/presentation/channel/view/list_channels.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:iptv_player/presentation/playlists/views/list_playlists_child.dart';
 
 class ListPlaylistsPage extends StatefulWidget {
   const ListPlaylistsPage({super.key});
@@ -35,6 +41,9 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
                   backgroundColor: WidgetStateProperty.all(playlistType == null
                       ? Theme.of(context).colorScheme.primary
                       : Colors.white),
+                  iconColor: WidgetStateProperty.all(playlistType == null
+                      ? Colors.white
+                      : Theme.of(context).colorScheme.onPrimary),
                   foregroundColor: WidgetStateProperty.all(playlistType == null
                       ? Colors.white
                       : Theme.of(context).colorScheme.onPrimary),
@@ -56,6 +65,9 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
                         playlistType == type
                             ? Theme.of(context).colorScheme.primary
                             : Colors.white),
+                    iconColor: WidgetStateProperty.all(playlistType == type
+                        ? Colors.white
+                        : Theme.of(context).colorScheme.onPrimary),
                     foregroundColor: WidgetStateProperty.all(
                         playlistType == type
                             ? Colors.white
@@ -72,6 +84,7 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
       } else if (state.status == PlaylistStatus.success) {
         return GridView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 16,
@@ -80,52 +93,98 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
             ),
             itemCount: state.playlists.length,
             itemBuilder: (context, index) {
-              final playlist = state.playlists[index];
+              final playlist = state.playlists[index] as Playlist;
               return Card(
-                child: Padding(
-                    padding: EdgeInsets.fromLTRB(16, 16, 0, 16),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            playlist.url != '' && playlist.url != null
-                                ? CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor:
-                                        Color(int.parse(playlist.avatarColor)),
-                                    child: Icon(IconData(
-                                        int.parse(playlist.avatarIcon),
-                                        fontFamily: 'MaterialIcons')))
-                                : CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor:
-                                        Color(int.parse(playlist.avatarColor)),
-                                    child: Icon(IconData(
-                                        int.parse(playlist.avatarIcon),
-                                        fontFamily: 'MaterialIcons'))),
-                            IconButton(
-                              alignment: Alignment.centerRight,
-                              icon: const Icon(Icons.more_vert),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Align(
-                            alignment: Alignment.centerLeft,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(playlist.name,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                Text('${playlist.childCount} channels'),
-                              ],
-                            )),
-                      ],
-                    )),
+                child: GestureDetector(
+                  onTap: () => {
+                    if (playlist.type == PlaylistType.library ||
+                        (playlist.type == PlaylistType.files &&
+                            playlist.playlistChildCount == 0 &&
+                            playlist.childCount! > 0))
+                      {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return BlocProvider(
+                            create: (context) => ChannelBloc(
+                                channelRepository: ChannelRepository())
+                              ..add(ChannelLoad(playlistId: playlist.id)),
+                            child: Theme(
+                                data: Theme.of(context),
+                                child: ListChannelsPage(
+                                    playlistName: playlist.name,
+                                    playlistId: playlist.id,
+                                    videoCount: playlist.childCount!,
+                                    avatarIcon: playlist.avatarIcon,
+                                    avatarColor: playlist.avatarColor)),
+                          );
+                        })),
+                      }
+                    else
+                      {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => Theme(
+                                    data: Theme.of(context),
+                                    child: BlocProvider<PlaylistBloc>(
+                                      create: (_) => PlaylistBloc(
+                                          playlistRepository:
+                                              PlaylistRepository()),
+                                      child: ListPlaylistsChild(
+                                        parentId: playlist.id!,
+                                        playlistName: playlist.name,
+                                        channelCount:
+                                            playlist.playlistChildCount!,
+                                      ),
+                                    )))),
+                      }
+                  },
+                  child: Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 0, 16),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              playlist.url != '' && playlist.url != null
+                                  ? CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor: Color(
+                                          int.parse(playlist.avatarColor)),
+                                      child: Icon(IconData(
+                                          int.parse(playlist.avatarIcon),
+                                          fontFamily: 'MaterialIcons')))
+                                  : CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor: Color(
+                                          int.parse(playlist.avatarColor)),
+                                      child: Icon(IconData(
+                                          int.parse(playlist.avatarIcon),
+                                          fontFamily: 'MaterialIcons'))),
+                              IconButton(
+                                alignment: Alignment.centerRight,
+                                icon: const Icon(Icons.more_vert),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(playlist.name,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  Text(
+                                      '${playlist.childCount == 0 ? playlist.playlistChildCount : playlist.childCount} channels'),
+                                ],
+                              )),
+                        ],
+                      )),
+                ),
               );
             });
       } else {
@@ -134,12 +193,13 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
     }
 
     buildPageContent(context, state) {
-      return Column(
+      return SingleChildScrollView(
+          child: Column(
         children: [
           buildFilter(context),
           buildListPlaylists(context, state),
         ],
-      );
+      ));
     }
 
     return SafeArea(

@@ -17,8 +17,11 @@
     "urlPlaylist": "Playlist URL",
     "numbersOfFileSelected": "{fileCount, plural, one {1 file} other {{fileCount} files}} selected",
     "channelCount": "{channelCount, plural, one {1 channel} other {{channelCount} channels}}",
-    "all": "Tất cả",
+    "all": "All",
     "url": "Url",
     "files": "Files",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "searchChannel": "Search channels",
+    "recent": "Recent",
+    "favorite": "Favorite"
 }

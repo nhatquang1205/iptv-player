@@ -22,13 +22,13 @@ class Channel {
   factory Channel.fromJson(Map<String, dynamic> json) {
     return Channel(
       id: json['id'],
-      playListId: json['playListId'],
+      playListId: json['playlist_id'],
       title: json['title'],
       url: json['url'],
       thumbnail: json['thumbnail'],
       duration: json['duration'],
-      createdAt: DateTime.parse(json['createdAt']),
-      isFavorite: json['isFavorite'],
+      createdAt: DateTime.parse(json['created_at']),
+      isFavorite: json['is_favorite'] == 1,
     );
   }
 

@@ -17,6 +17,8 @@ class Playlist {
   String? thumbnail;
   int? parentId;
   int? childCount;
+  int? playlistChildCount;
+  List<Playlist>? children;
 
   late List<File> files;
 
@@ -33,7 +35,9 @@ class Playlist {
     this.files = const [],
     this.url,
     this.childCount,
+    this.playlistChildCount,
     this.thumbnail,
+    this.children,
   });
 
   factory Playlist.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,7 @@ class Playlist {
       createdAt: DateTime.parse(json['created_at']),
       type: PlaylistType.values[json['type']],
       childCount: json['child_count'],
+      playlistChildCount: json['playlist_child_count'],
       thumbnail: json['thumbnail'],
     );
   }
@@ -67,16 +72,18 @@ class Playlist {
     };
   }
 
-  Playlist copyWith(
-      {String? name,
-      String? avatarIcon,
-      String? avatarColor,
-      String? passCode,
-      bool? isUsePassCode,
-      DateTime? createdAt,
-      List<Channel>? channels,
-      List<File>? files,
-      String? url}) {
+  Playlist copyWith({
+    String? name,
+    String? avatarIcon,
+    String? avatarColor,
+    String? passCode,
+    bool? isUsePassCode,
+    DateTime? createdAt,
+    List<Channel>? channels,
+    List<File>? files,
+    String? url,
+    List<Playlist>? children,
+  }) {
     return Playlist(
       name: name ?? this.name,
       avatarIcon: avatarIcon ?? this.avatarIcon,
@@ -88,6 +95,7 @@ class Playlist {
       files: files ?? this.files,
       url: url ?? this.url,
       type: type,
+      children: children ?? this.children,
     );
   }
 }

@@ -206,7 +206,7 @@ abstract class AppLocalizations {
   /// No description provided for @all.
   ///
   /// In en, this message translates to:
-  /// **'Tất cả'**
+  /// **'All'**
   String get all;
 
   /// No description provided for @url.
@@ -226,6 +226,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gallery'**
   String get gallery;
+
+  /// No description provided for @searchChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search channels'**
+  String get searchChannel;
+
+  /// No description provided for @recent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recent;
+
+  /// No description provided for @favorite.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite'**
+  String get favorite;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -27,6 +27,10 @@ class PlaylistCubit extends Cubit<Playlist> {
     emit(state.copyWith(files: files));
   }
 
+  addChildrenPlaylist(List<Playlist> children) {
+    emit(state.copyWith(children: children));
+  }
+
   void updateName(String name) {
     emit(state.copyWith(name: name));
   }

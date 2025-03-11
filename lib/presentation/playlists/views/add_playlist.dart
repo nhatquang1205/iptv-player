@@ -1,5 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
 import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/data/models/channel.dart';
+import 'package:iptv_player/data/models/playlist.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class AddPlaylistView extends StatelessWidget {
@@ -67,10 +69,7 @@ class AddPlaylistView extends StatelessWidget {
           allowMultiple: true,
         );
       } else if (type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {
-        result = await FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: ['m3u', 'm3u8'],
-        );
+        result = await FilePicker.platform.pickFiles(type: FileType.audio);
       }
 
       if (result == null || result.count == 0) return;
@@ -121,7 +120,8 @@ class AddPlaylistView extends StatelessWidget {
     }
 
     Future<void> savePlaylist() async {
-      if (type.type != TypeOfAddPlaylistEnum.inputPlaylistUrl) {
+      if (type.type == TypeOfAddPlaylistEnum.importFromLibrary ||
+          type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
         for (var channel in state.channels!) {
           final Directory appDir = await getApplicationDocumentsDirectory();
           final String fileName = basename(channel.url);
@@ -137,8 +137,70 @@ class AddPlaylistView extends StatelessWidget {
           if (type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
             var videoInfo = await this.videoInfo.getVideoInfo(savedPath);
             String? thumbnailPath = await getVideoThumbnail(channel.url);
-            channel.thumbnail = thumbnailPath ?? '';
-            channel.duration = (videoInfo?.duration ?? 0).toInt();
+
+            if (thumbnailPath != null && thumbnailPath.isNotEmpty) {
+              final thumbnailFile = File(thumbnailPath);
+              final String baseThumbnailPath = basename(thumbnailPath);
+              final String thumbnailSavedPath =
+                  '${appDir.path}/$baseThumbnailPath';
+              await thumbnailFile.copy(thumbnailSavedPath);
+              channel.thumbnail = thumbnailSavedPath;
+              channel.duration = (videoInfo?.duration ?? 0).toInt();
+            }
+          }
+        }
+      }
+
+      if (type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl) {}
+
+      if (type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {
+        context.read<PlaylistCubit>().clearChannels();
+        for (var file in state.files) {
+          final m3uList = await M3uList.loadFromFile(file.path);
+          if (m3uList.groupTitles.isNotEmpty) {
+            var childrenPlaylist = <Playlist>[];
+            for (var group in m3uList.groupTitles) {
+              final childPlaylist = Playlist(
+                name: group,
+                thumbnail: '',
+                createdAt: DateTime.now(),
+                avatarIcon: "0xe380",
+                avatarColor: "0xFF64B5F6",
+                isUsePassCode: false,
+                type: PlaylistType.files,
+                children: [],
+                channels: [],
+              );
+              childrenPlaylist.add(childPlaylist);
+            }
+            for (var item in m3uList.items) {
+              final channel = Channel(
+                title: item.title,
+                url: item.link,
+                thumbnail: '',
+                duration: 0,
+                createdAt: DateTime.now(),
+                isFavorite: false,
+              );
+              childrenPlaylist
+                  .where((element) => element.name == item.groupTitle)
+                  .first
+                  .channels!
+                  .add(channel);
+            }
+            context.read<PlaylistCubit>().addChildrenPlaylist(childrenPlaylist);
+          } else {
+            for (var item in m3uList.items) {
+              final channel = Channel(
+                title: item.title,
+                url: item.link,
+                thumbnail: '',
+                duration: 0,
+                createdAt: DateTime.now(),
+                isFavorite: false,
+              );
+              context.read<PlaylistCubit>().addChannel(channel);
+            }
           }
         }
       }
@@ -149,6 +211,7 @@ class AddPlaylistView extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           actions: [
             TextButton(
                 onPressed: () => {savePlaylist()},

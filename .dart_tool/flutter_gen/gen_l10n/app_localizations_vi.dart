@@ -1,5 +1,5 @@
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -77,4 +77,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get gallery => 'Videos';
+
+  @override
+  String get searchChannel => 'Tìm kiếm kênh';
+
+  @override
+  String get recent => 'Gần đây';
+
+  @override
+  String get favorite => 'Yêu thích';
 }

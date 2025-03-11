@@ -11,7 +11,7 @@ class AddPlaylistMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final typeOfAddPlaylists = getTypeOfAddPlaylist(context);
     return SizedBox(
-        height: 250,
+        height: 270,
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: Column(
@@ -26,8 +26,8 @@ class AddPlaylistMenu extends StatelessWidget {
                         isScrollControlled: true,
                         builder: (BuildContext context) {
                           return DraggableScrollableSheet(
-                              initialChildSize: 0.6,
-                              minChildSize: 0.6,
+                              initialChildSize: 0.65,
+                              minChildSize: 0.65,
                               maxChildSize: 1,
                               expand: false,
                               builder: (context, scrollController) {

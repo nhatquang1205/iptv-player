@@ -7,6 +7,11 @@ class PlaylistLoad extends PlaylistEvent {
   PlaylistLoad({required this.type});
 }
 
+class PlaylistLoadByParentId extends PlaylistEvent {
+  final int parentId;
+  PlaylistLoadByParentId({required this.parentId});
+}
+
 class PlaylistAdd extends PlaylistEvent {
   final Playlist playlist;
   PlaylistAdd({required this.playlist});

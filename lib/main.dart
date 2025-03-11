@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:iptv_player/common/helpers/db_helper.dart';
 import 'package:iptv_player/common/theme/app_theme.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
   DBHelper db = DBHelper.instance;
   await db.initDB();
   runApp(const MyApp());

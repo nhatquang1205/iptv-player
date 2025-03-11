@@ -13,6 +13,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
       : super(const PlaylistState()) {
     on<PlaylistAdd>(_postPlaylist);
     on<PlaylistLoad>(_getAllPlaylists);
+    on<PlaylistLoadByParentId>(_getPlaylistsByParentId);
   }
 
   @override
@@ -49,6 +50,21 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
 
     try {
       final playlists = await playlistRepository.getPlaylists(event.type);
+
+      emit(
+          state.copyWith(playlists: playlists, status: PlaylistStatus.success));
+    } catch (e) {
+      emit(state.copyWith(status: PlaylistStatus.error));
+    }
+  }
+
+  Future<void> _getPlaylistsByParentId(
+      PlaylistLoadByParentId event, Emitter<PlaylistState> emit) async {
+    emit(state.copyWith(status: PlaylistStatus.loading));
+
+    try {
+      final playlists =
+          await playlistRepository.getPlaylistsByParentId(event.parentId);
 
       emit(
           state.copyWith(playlists: playlists, status: PlaylistStatus.success));

@@ -1,1 +1,29 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"iptv-player-8b0eb","appId":"1:430709451697:android:4d9a3d501859e741e9eb90","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"iptv-player-8b0eb","configurations":{"android":"1:430709451697:android:4d9a3d501859e741e9eb90"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "iptv-player-8b0eb",
+          "appId": "1:430709451697:android:4d9a3d501859e741e9eb90",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "iptv-player-8b0eb",
+          "configurations": {
+            "android": "1:430709451697:android:4d9a3d501859e741e9eb90"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

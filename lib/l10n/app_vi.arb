@@ -20,5 +20,8 @@
     "all": "Tất cả",
     "url": "Url",
     "files": "Tệp",
-    "gallery": "Videos"
+    "gallery": "Videos",
+    "searchChannel": "Tìm kiếm kênh",
+    "recent": "Gần đây",
+    "favorite": "Yêu thích"
 }

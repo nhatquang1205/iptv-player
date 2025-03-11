@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:iptv_player/common/widgets/animated_border_fab.dart';
 import 'package:iptv_player/data/repositories/playlist_repository.dart';
 import 'package:iptv_player/presentation/home/nav_bar.dart';
