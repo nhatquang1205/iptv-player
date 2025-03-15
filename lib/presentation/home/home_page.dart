@@ -5,6 +5,7 @@ import 'package:iptv_player/data/repositories/playlist_repository.dart';
 import 'package:iptv_player/presentation/home/nav_bar.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
 import 'package:iptv_player/presentation/playlists/views/list_playlists.dart';
+import 'package:iptv_player/presentation/settings/views/setting_list.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -39,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         return const Center(child: Text('XTream Page'));
       case 3:
-        return const Center(child: Text('Setting Page'));
+        return const SettingListPage();
       default:
         return const Center(child: Text('Unknown Page'));
     }

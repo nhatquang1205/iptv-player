@@ -32,7 +32,9 @@ class VideoCard extends StatelessWidget {
                   child: Icon(IconData(int.parse(avatarIcon),
                       fontFamily: 'MaterialIcons')))
               : Image(
-                  image: FileImage(File(imagePath)),
+                  image: imagePath.contains('http')
+                      ? NetworkImage(imagePath)
+                      : FileImage(File(imagePath)),
                   width: double.infinity,
                   height: 120,
                   fit: BoxFit.cover,

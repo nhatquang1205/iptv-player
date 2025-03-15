@@ -102,3 +102,7 @@ List<TypeOfAddPlaylist> getTypeOfAddPlaylist(BuildContext context) {
     // ),
   ];
 }
+
+class Constants {
+  static const String icSplashLogo = 'assets/images/splash_icon.gif';
+}

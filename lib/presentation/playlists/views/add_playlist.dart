@@ -151,7 +151,9 @@ class AddPlaylistView extends StatelessWidget {
         }
       }
 
-      if (type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl) {}
+      if (type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl) {
+        final m3uList = M3uList.load(state.url!);
+      }
 
       if (type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {
         context.read<PlaylistCubit>().clearChannels();
@@ -177,7 +179,7 @@ class AddPlaylistView extends StatelessWidget {
               final channel = Channel(
                 title: item.title,
                 url: item.link,
-                thumbnail: '',
+                thumbnail: item.attributes['tvg-logo'] ?? '',
                 duration: 0,
                 createdAt: DateTime.now(),
                 isFavorite: false,
@@ -215,20 +217,22 @@ class AddPlaylistView extends StatelessWidget {
           actions: [
             TextButton(
                 onPressed: () => {savePlaylist()},
-                child: Text(AppLocalizations.of(context)!.save))
+                child: Text(
+                    style: TextStyle(fontSize: 16),
+                    AppLocalizations.of(context)!.save))
           ],
+          leadingWidth: 80,
           leading: TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
                 style: TextStyle(fontSize: 16),
                 AppLocalizations.of(context)!.cancel),
           ),
-          title: Center(
-            child: Text(
-              type.name,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+          title: Text(
+            type.name,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
+          centerTitle: true,
         ),
         body: Padding(
             padding: EdgeInsets.all(16),

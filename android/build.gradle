@@ -32,7 +32,3 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
-
-dependencies {
-  implementation 'com.google.android.gms:play-services-ads:24.0.0'
-}
