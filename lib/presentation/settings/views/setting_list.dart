@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iptv_player/presentation/language/language.dart';
+import 'package:iptv_player/presentation/settings/views/review_page.dart';
 
 class SettingListPage extends StatelessWidget {
   const SettingListPage({super.key});
@@ -28,7 +29,10 @@ class SettingListPage extends StatelessWidget {
               icon: Icons.star,
               iconColor: Theme.of(context).primaryColor,
               title: 'Rate Us',
-              onTap: () => {}),
+              onTap: () => {
+                    CustomRatingBottomSheet.showFeedBackBottomSheet(
+                        context: context)
+                  }),
           item(
             icon: Icons.privacy_tip,
             iconColor: Theme.of(context).primaryColor,

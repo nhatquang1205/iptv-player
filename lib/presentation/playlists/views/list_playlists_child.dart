@@ -135,7 +135,7 @@ class _ListPlaylistsChildState extends State<ListPlaylistsChild> {
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               centerTitle: true,
               title: Padding(
-                  padding: EdgeInsets.only(top: 16),
+                  padding: EdgeInsets.only(top: 16, bottom: 8),
                   child: Column(
                     children: [
                       Text(

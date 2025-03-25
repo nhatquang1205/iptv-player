@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iptv_player/common/constants/constants.dart';
+import 'package:iptv_player/common/constants/language_constants.dart';
 import 'package:iptv_player/data/models/playlist.dart';
 import 'package:iptv_player/data/repositories/channel_repository.dart';
 import 'package:iptv_player/data/repositories/playlist_repository.dart';
@@ -18,6 +19,7 @@ class ListPlaylistsPage extends StatefulWidget {
 }
 
 class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
+  final GlobalKey _iconKey = GlobalKey();
   PlaylistType? playlistType;
   @override
   Widget build(BuildContext context) {
@@ -78,6 +80,44 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
       );
     }
 
+    void showActionMenu(
+        BuildContext context, TapDownDetails details, int? playlistId) {
+      final Offset offset = details.globalPosition;
+
+      showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(
+          offset.dx,
+          offset.dy,
+          offset.dx + 1,
+          offset.dy + 1,
+        ),
+        items: [
+          PopupMenuItem(
+            child: ListTile(
+              leading: const Icon(Icons.delete),
+              iconColor: Theme.of(context).colorScheme.error,
+              title: Text(
+                translation(context).delete,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              onTap: () {
+                context
+                    .read<PlaylistBloc>()
+                    .add(PlaylistRemove(playlistId: playlistId!));
+
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
+      ).then((value) {
+        if (value != null) {
+          print("Selected: $value");
+        }
+      });
+    }
+
     Widget buildListPlaylists(context, state) {
       if (state.status == PlaylistStatus.loading) {
         return const Center(child: CircularProgressIndicator());
@@ -88,7 +128,7 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
+              crossAxisSpacing: 12,
               childAspectRatio: 1.3,
             ),
             itemCount: state.playlists.length,
@@ -161,10 +201,10 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
                                       child: Icon(IconData(
                                           int.parse(playlist.avatarIcon),
                                           fontFamily: 'MaterialIcons'))),
-                              IconButton(
-                                alignment: Alignment.centerRight,
-                                icon: const Icon(Icons.more_vert),
-                                onPressed: () {},
+                              GestureDetector(
+                                onTapDown: (details) => showActionMenu(
+                                    context, details, playlist.id),
+                                child: Icon(Icons.more_vert_outlined),
                               ),
                             ],
                           ),
@@ -179,7 +219,7 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
                                   Text(
-                                      '${playlist.childCount == 0 ? playlist.playlistChildCount : playlist.childCount} channels'),
+                                      '${playlist.childCount == 0 ? playlist.playlistChildCount : playlist.childCount} ${translation(context).channels}'),
                                 ],
                               )),
                         ],
@@ -192,11 +232,26 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
       }
     }
 
+    Widget buildBanner(context) {
+      return Container(
+        margin: const EdgeInsets.only(bottom: 16, top: 8),
+        height: 150,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          image: const DecorationImage(
+            image: AssetImage('assets/images/home_banner.png'),
+            fit: BoxFit.fitHeight,
+          ),
+        ),
+      );
+    }
+
     buildPageContent(context, state) {
       return SingleChildScrollView(
           child: Column(
         children: [
           buildFilter(context),
+          buildBanner(context),
           buildListPlaylists(context, state),
         ],
       ));

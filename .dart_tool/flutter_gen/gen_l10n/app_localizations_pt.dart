@@ -98,4 +98,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get favorite => 'Favorite';
+
+  @override
+  String get delete => 'Xoá';
 }

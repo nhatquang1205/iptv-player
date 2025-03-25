@@ -4,6 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iptv_player/presentation/home/add_playlist_menu.dart';
 
 class AnimatedBorderFab extends StatefulWidget {
+  final VoidCallback? onBottomSheetClosed;
+
+  const AnimatedBorderFab({super.key, this.onBottomSheetClosed});
   @override
   _AnimatedBorderFabState createState() => _AnimatedBorderFabState();
 }
@@ -19,6 +22,17 @@ class _AnimatedBorderFabState extends State<AnimatedBorderFab>
       vsync: this,
       duration: const Duration(seconds: 3), // Controls animation speed
     )..repeat(); // Infinite loop animation
+  }
+
+  void _openBottomSheet(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return AddPlaylistMenu(
+          onBottomSheetClosed: widget.onBottomSheetClosed,
+        );
+      },
+    );
   }
 
   @override
@@ -52,13 +66,7 @@ class _AnimatedBorderFabState extends State<AnimatedBorderFab>
                 ),
               ),
               child: FloatingActionButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AddPlaylistMenu();
-                      });
-                },
+                onPressed: () => _openBottomSheet(context),
                 backgroundColor: Colors.transparent, // Important!
                 elevation: 0, // Avoids default shadow
                 shape: const CircleBorder(),

@@ -92,4 +92,11 @@ class PlaylistRepository {
       return Playlist.fromJson(playlists[i]);
     });
   }
+
+  Future<void> removePlaylist(int playlistId) async {
+    final database = await DBHelper.instance.database;
+
+    await database
+        .delete('playlists', where: 'id = ?', whereArgs: [playlistId]);
+  }
 }

@@ -23,5 +23,6 @@
     "gallery": "Gallery",
     "searchChannel": "Search channels",
     "recent": "Recent",
-    "favorite": "Favorite"
+    "favorite": "Favorite",
+    "delete": "Xoá"
 }

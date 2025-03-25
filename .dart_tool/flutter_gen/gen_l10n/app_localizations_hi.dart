@@ -86,4 +86,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get favorite => 'Yêu thích';
+
+  @override
+  String get delete => 'Xoá';
 }

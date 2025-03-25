@@ -16,3 +16,8 @@ class PlaylistAdd extends PlaylistEvent {
   final Playlist playlist;
   PlaylistAdd({required this.playlist});
 }
+
+class PlaylistRemove extends PlaylistEvent {
+  final int playlistId;
+  PlaylistRemove({required this.playlistId});
+}

@@ -1,26 +1,40 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_video_info/flutter_video_info.dart';
+import 'package:http/http.dart' as http;
 import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/data/models/channel.dart';
 import 'package:iptv_player/data/models/playlist.dart';
+import 'package:iptv_player/data/repositories/playlist_repository.dart';
+import 'package:iptv_player/presentation/home/home_page.dart';
+import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:iptv_player/presentation/playlists/views/list_playlists.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-class AddPlaylistView extends StatelessWidget {
+class AddPlaylistView extends StatefulWidget {
   final TypeOfAddPlaylist type;
-  final videoInfo = FlutterVideoInfo();
 
   AddPlaylistView({super.key, required this.type});
+
+  @override
+  State<AddPlaylistView> createState() => _AddPlaylistViewState();
+}
+
+class _AddPlaylistViewState extends State<AddPlaylistView> {
+  final videoInfo = FlutterVideoInfo();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +77,12 @@ class AddPlaylistView extends StatelessWidget {
 
     Future<void> pickAndSaveAsyncs() async {
       FilePickerResult? result;
-      if (type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
+      if (widget.type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
         result = await FilePicker.platform.pickFiles(
           type: FileType.video,
           allowMultiple: true,
         );
-      } else if (type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {
+      } else if (widget.type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {
         result = await FilePicker.platform.pickFiles(type: FileType.audio);
       }
 
@@ -105,7 +119,7 @@ class AddPlaylistView extends StatelessWidget {
             pickAndSaveAsyncs();
           },
           icon: const Icon(Icons.upload),
-          label: Text(type.channelAction ?? ''),
+          label: Text(widget.type.channelAction ?? ''),
           iconAlignment: IconAlignment.start,
         );
       }
@@ -119,9 +133,49 @@ class AddPlaylistView extends StatelessWidget {
               .numbersOfFileSelected(state.channels!.length)));
     }
 
+    Future<String?> downloadAndSaveFile(String url, String fileName) async {
+      try {
+        // Step 1: Download the file as bytes
+        final response = await http.get(Uri.parse(url));
+
+        if (response.statusCode == 200) {
+          // Step 2: Get the device's temporary or application directory
+          final directory =
+              await getApplicationDocumentsDirectory(); // or getTemporaryDirectory()
+
+          // Step 3: Create a file path
+          final filePath = '${directory.path}/$fileName';
+
+          // Step 4: Write the bytes to a file
+          File file = File(filePath);
+          await file.writeAsBytes(response.bodyBytes);
+
+          return filePath; // Return file path after saving
+        } else {
+          print("Failed to download file: ${response.statusCode}");
+          return null;
+        }
+      } catch (e) {
+        print("Error downloading file: $e");
+        return null;
+      }
+    }
+
+    Future<void> deleteFile(String filePath) async {
+      try {
+        File file = File(filePath);
+        if (await file.exists()) {
+          await file.delete();
+          print("File deleted: $filePath");
+        }
+      } catch (e) {
+        print("Error deleting file: $e");
+      }
+    }
+
     Future<void> savePlaylist() async {
-      if (type.type == TypeOfAddPlaylistEnum.importFromLibrary ||
-          type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
+      if (widget.type.type == TypeOfAddPlaylistEnum.importFromLibrary ||
+          widget.type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
         for (var channel in state.channels!) {
           final Directory appDir = await getApplicationDocumentsDirectory();
           final String fileName = basename(channel.url);
@@ -134,7 +188,7 @@ class AddPlaylistView extends StatelessWidget {
           await savedVideo.copy(savedPath);
           channel.url = savedPath;
 
-          if (type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
+          if (widget.type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
             var videoInfo = await this.videoInfo.getVideoInfo(savedPath);
             String? thumbnailPath = await getVideoThumbnail(channel.url);
 
@@ -151,11 +205,61 @@ class AddPlaylistView extends StatelessWidget {
         }
       }
 
-      if (type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl) {
-        final m3uList = M3uList.load(state.url!);
+      if (widget.type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl) {
+        var filePath =
+            await downloadAndSaveFile(state.url!, state.url!.split('/').last);
+
+        final m3uList = await M3uList.loadFromFile(filePath!);
+        if (m3uList.groupTitles.isNotEmpty) {
+          var childrenPlaylist = <Playlist>[];
+          for (var group in m3uList.groupTitles) {
+            final childPlaylist = Playlist(
+              name: group,
+              thumbnail: '',
+              createdAt: DateTime.now(),
+              avatarIcon: "0xe380",
+              avatarColor: "0xFF64B5F6",
+              isUsePassCode: false,
+              type: PlaylistType.files,
+              children: [],
+              channels: [],
+            );
+            childrenPlaylist.add(childPlaylist);
+          }
+          for (var item in m3uList.items) {
+            final channel = Channel(
+              title: item.title,
+              url: item.link,
+              thumbnail: item.attributes['tvg-logo'] ?? '',
+              duration: 0,
+              createdAt: DateTime.now(),
+              isFavorite: false,
+            );
+            childrenPlaylist
+                .where((element) => element.name == item.groupTitle)
+                .first
+                .channels!
+                .add(channel);
+          }
+          context.read<PlaylistCubit>().addChildrenPlaylist(childrenPlaylist);
+        } else {
+          for (var item in m3uList.items) {
+            final channel = Channel(
+              title: item.title,
+              url: item.link,
+              thumbnail: '',
+              duration: 0,
+              createdAt: DateTime.now(),
+              isFavorite: false,
+            );
+            context.read<PlaylistCubit>().addChannel(channel);
+          }
+        }
+
+        await deleteFile(filePath);
       }
 
-      if (type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {
+      if (widget.type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {
         context.read<PlaylistCubit>().clearChannels();
         for (var file in state.files) {
           final m3uList = await M3uList.loadFromFile(file.path);
@@ -208,7 +312,10 @@ class AddPlaylistView extends StatelessWidget {
       }
 
       await context.read<PlaylistCubit>().savePlaylist();
-      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => MyHomePage(title: 'IPTV Player')),
+      );
     }
 
     return Scaffold(
@@ -229,7 +336,7 @@ class AddPlaylistView extends StatelessWidget {
                 AppLocalizations.of(context)!.cancel),
           ),
           title: Text(
-            type.name,
+            widget.type.name,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -252,15 +359,15 @@ class AddPlaylistView extends StatelessWidget {
                         contentPadding: EdgeInsets.all(8),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8)),
-                        suffixIcon: type.channelAction != '' &&
-                                type.channelAction != null
+                        suffixIcon: widget.type.channelAction != '' &&
+                                widget.type.channelAction != null
                             ? generateUploadedChannel()
                             : null,
                       ),
                       onChanged: (value) =>
                           context.read<PlaylistCubit>().updateName(value),
                     )),
-                type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl
+                widget.type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -318,7 +425,7 @@ class AddPlaylistView extends StatelessWidget {
                     ),
                   ),
                 ),
-                type.type != TypeOfAddPlaylistEnum.inputPlaylistUrl
+                widget.type.type != TypeOfAddPlaylistEnum.inputPlaylistUrl
                     ? Column(
                         children: [
                           Center(

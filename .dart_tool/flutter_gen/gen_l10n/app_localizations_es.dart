@@ -98,4 +98,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get favorite => 'Favorite';
+
+  @override
+  String get delete => 'Xoá';
 }

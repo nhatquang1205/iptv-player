@@ -14,6 +14,7 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
     on<PlaylistAdd>(_postPlaylist);
     on<PlaylistLoad>(_getAllPlaylists);
     on<PlaylistLoadByParentId>(_getPlaylistsByParentId);
+    on<PlaylistRemove>(_removePlaylist);
   }
 
   @override
@@ -68,6 +69,24 @@ class PlaylistBloc extends Bloc<PlaylistEvent, PlaylistState> {
 
       emit(
           state.copyWith(playlists: playlists, status: PlaylistStatus.success));
+    } catch (e) {
+      emit(state.copyWith(status: PlaylistStatus.error));
+    }
+  }
+
+  Future<void> _removePlaylist(
+      PlaylistRemove event, Emitter<PlaylistState> emit) async {
+    emit(state.copyWith(status: PlaylistStatus.loading));
+
+    try {
+      await playlistRepository.removePlaylist(event.playlistId);
+
+      final updatedPlaylists = state.playlists
+          .where((playlist) => playlist.id != event.playlistId)
+          .toList();
+
+      emit(state.copyWith(
+          playlists: updatedPlaylists, status: PlaylistStatus.success));
     } catch (e) {
       emit(state.copyWith(status: PlaylistStatus.error));
     }
