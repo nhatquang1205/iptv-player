@@ -174,6 +174,9 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
     }
 
     Future<void> savePlaylist() async {
+      setState(() {
+        isLoading = true;
+      });
       if (widget.type.type == TypeOfAddPlaylistEnum.importFromLibrary ||
           widget.type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
         for (var channel in state.channels!) {
@@ -312,9 +315,11 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
       }
 
       await context.read<PlaylistCubit>().savePlaylist();
+      setState(() {
+        isLoading = false;
+      });
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            builder: (context) => MyHomePage(title: 'IPTV Player')),
+        MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     }
 
@@ -341,171 +346,180 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
           ),
           centerTitle: true,
         ),
-        body: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontSize: 18,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold),
-                    AppLocalizations.of(context)!.playlistName),
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        suffixIcon: widget.type.channelAction != '' &&
-                                widget.type.channelAction != null
-                            ? generateUploadedChannel()
-                            : null,
-                      ),
-                      onChanged: (value) =>
-                          context.read<PlaylistCubit>().updateName(value),
-                    )),
-                widget.type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                      fontSize: 18,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
-                              AppLocalizations.of(context)!.inputPlaylistUrl),
-                          Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(8),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                ),
-                                onChanged: (value) => context
-                                    .read<PlaylistCubit>()
-                                    .updateUrl(value),
-                              )),
-                        ],
-                      )
-                    : SizedBox(),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+        resizeToAvoidBottomInset: true,
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontSize: 18,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold),
+                        AppLocalizations.of(context)!.playlistName),
+                    Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            suffixIcon: widget.type.channelAction != '' &&
+                                    widget.type.channelAction != null
+                                ? generateUploadedChannel()
+                                : null,
+                          ),
+                          onChanged: (value) =>
+                              context.read<PlaylistCubit>().updateName(value),
+                        )),
+                    widget.type.type == TypeOfAddPlaylistEnum.inputPlaylistUrl
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                          fontSize: 18,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold),
+                                  AppLocalizations.of(context)!
+                                      .inputPlaylistUrl),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.all(8),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                    ),
+                                    onChanged: (value) => context
+                                        .read<PlaylistCubit>()
+                                        .updateUrl(value),
+                                  )),
+                            ],
+                          )
+                        : SizedBox(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
                                       fontSize: 20,
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w900,
                                     ),
-                            AppLocalizations.of(context)!.protectByPasscode),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8),
-                          child: Switch(
-                              value: state.isUsePassCode,
-                              onChanged: (value) => {
-                                    context
-                                        .read<PlaylistCubit>()
-                                        .updateIsUsePassCode(value)
-                                  }),
+                                AppLocalizations.of(context)!
+                                    .protectByPasscode),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Switch(
+                                  value: state.isUsePassCode,
+                                  onChanged: (value) => {
+                                        context
+                                            .read<PlaylistCubit>()
+                                            .updateIsUsePassCode(value)
+                                      }),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                widget.type.type != TypeOfAddPlaylistEnum.inputPlaylistUrl
-                    ? Column(
-                        children: [
-                          Center(
-                            child: state.avatarIcon != ''
-                                ? CircleAvatar(
-                                    radius: 32,
-                                    backgroundColor:
-                                        Color(int.parse(state.avatarColor)),
-                                    child: Icon(IconData(
-                                        int.parse(state.avatarIcon),
-                                        fontFamily: 'MaterialIcons')),
-                                  )
-                                : CircleAvatar(
-                                    radius: 32,
-                                    backgroundColor:
-                                        Color(int.parse(state.avatarColor)),
-                                  ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 16),
-                            child: GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 1.7,
+                    widget.type.type != TypeOfAddPlaylistEnum.inputPlaylistUrl
+                        ? Column(
+                            children: [
+                              Center(
+                                child: state.avatarIcon != ''
+                                    ? CircleAvatar(
+                                        radius: 32,
+                                        backgroundColor:
+                                            Color(int.parse(state.avatarColor)),
+                                        child: Icon(IconData(
+                                            int.parse(state.avatarIcon),
+                                            fontFamily: 'MaterialIcons')),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 32,
+                                        backgroundColor:
+                                            Color(int.parse(state.avatarColor)),
+                                      ),
                               ),
-                              itemCount: colors.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    context
-                                        .read<PlaylistCubit>()
-                                        .updateAvatarColor(colors[index]);
-                                  },
-                                  child: CircleAvatar(
-                                    backgroundColor:
-                                        Color(int.parse(colors[index])),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-                            child: GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 1.7,
+                              SizedBox(
+                                height: 8,
                               ),
-                              itemCount: icons.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    context
-                                        .read<PlaylistCubit>()
-                                        .updateAvatarIcon(
-                                            icons[index].codePoint.toString());
-                                  },
-                                  child: CircleAvatar(
-                                    backgroundColor:
-                                        Color(int.parse(state.avatarColor)),
-                                    child: Icon(icons[index]),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 16),
+                                child: GridView.builder(
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    mainAxisSpacing: 8,
+                                    childAspectRatio: 1.7,
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      )
-                    : SizedBox(),
-              ],
-            )));
+                                  itemCount: colors.length,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        context
+                                            .read<PlaylistCubit>()
+                                            .updateAvatarColor(colors[index]);
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            Color(int.parse(colors[index])),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+                                child: GridView.builder(
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    mainAxisSpacing: 8,
+                                    childAspectRatio: 1.7,
+                                  ),
+                                  itemCount: icons.length,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        context
+                                            .read<PlaylistCubit>()
+                                            .updateAvatarIcon(icons[index]
+                                                .codePoint
+                                                .toString());
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            Color(int.parse(state.avatarColor)),
+                                        child: Icon(icons[index]),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
+                  ],
+                )));
   }
 }

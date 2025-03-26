@@ -97,6 +97,10 @@ class PlaylistRepository {
     final database = await DBHelper.instance.database;
 
     await database
+        .delete('channels', where: 'playlist_id = ?', whereArgs: [playlistId]);
+    await database
+        .delete('playlists', where: 'parent_id = ?', whereArgs: [playlistId]);
+    await database
         .delete('playlists', where: 'id = ?', whereArgs: [playlistId]);
   }
 }

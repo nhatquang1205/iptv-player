@@ -27,7 +27,6 @@ class ThemeSheet {
               brightness: palette.brightness,
               primary: palette.primaryText,
               onPrimary: palette.primaryText,
-              surface: palette.selectedButtonBackground,
               onSurface: palette.selectedButtonBackground),
           textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(

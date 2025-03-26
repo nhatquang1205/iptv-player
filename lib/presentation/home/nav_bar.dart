@@ -16,7 +16,7 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBottomNavigationBar.builder(
-      height: 96,
+      height: 90,
       itemCount: 4,
       gapWidth: 70,
       tabBuilder: (int index, bool isActive) {

@@ -74,9 +74,7 @@ class _LanguageWidgetState extends State<LanguageWidget> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MyHomePage(
-                                    title: 'IPTV Player',
-                                  )));
+                              builder: (context) => MyHomePage()));
                     },
                     icon: Icon(Icons.check),
                     color: Theme.of(context).primaryColor,

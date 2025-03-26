@@ -11,11 +11,16 @@ class ChannelState {
   final ChannelStatus status;
   final List<Channel> channels;
   final String message;
+  final int total;
+  final bool isLoadMore;
+  static const limit = 20;
 
   const ChannelState({
     this.status = ChannelStatus.initial,
     this.channels = const [],
     this.message = '',
+    this.total = 0,
+    this.isLoadMore = true,
   });
 
   ChannelState copyWith({
@@ -24,11 +29,15 @@ class ChannelState {
     List<Playlist>? playlists,
     int? playlistId,
     String? message,
+    int? total,
+    bool? isLoadMore,
   }) {
     return ChannelState(
       status: status ?? this.status,
       channels: channels ?? this.channels,
       message: message ?? this.message,
+      total: total ?? this.total,
+      isLoadMore: isLoadMore ?? this.isLoadMore,
     );
   }
 }

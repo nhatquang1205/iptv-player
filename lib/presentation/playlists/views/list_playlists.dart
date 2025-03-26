@@ -6,21 +6,30 @@ import 'package:iptv_player/data/models/playlist.dart';
 import 'package:iptv_player/data/repositories/channel_repository.dart';
 import 'package:iptv_player/data/repositories/playlist_repository.dart';
 import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
-import 'package:iptv_player/presentation/channel/view/list_channels.dart';
+import 'package:iptv_player/presentation/channel/view/all_channels.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iptv_player/presentation/playlists/views/list_playlists_child.dart';
 
 class ListPlaylistsPage extends StatefulWidget {
-  const ListPlaylistsPage({super.key});
+  final bool isRefreshList;
+  const ListPlaylistsPage({super.key, this.isRefreshList = false});
 
   @override
   State<ListPlaylistsPage> createState() => _ListPlaylistsPageState();
 }
 
 class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
-  final GlobalKey _iconKey = GlobalKey();
   PlaylistType? playlistType;
+
+  @override
+  void didUpdateWidget(covariant ListPlaylistsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isRefreshList) {
+      _getAllPlaylists(context, playlistType);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _getAllPlaylists(context, playlistType);
@@ -146,16 +155,14 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
                             MaterialPageRoute(builder: (context) {
                           return BlocProvider(
                             create: (context) => ChannelBloc(
-                                channelRepository: ChannelRepository())
-                              ..add(ChannelLoad(playlistId: playlist.id)),
+                                channelRepository: ChannelRepository()),
                             child: Theme(
                                 data: Theme.of(context),
-                                child: ListChannelsPage(
-                                    playlistName: playlist.name,
-                                    playlistId: playlist.id,
-                                    videoCount: playlist.childCount!,
-                                    avatarIcon: playlist.avatarIcon,
-                                    avatarColor: playlist.avatarColor)),
+                                child: ListAllChannelsPage(
+                                  playlistName: playlist.name,
+                                  playlistId: playlist.id,
+                                  videoCount: playlist.childCount!,
+                                )),
                           );
                         })),
                       }
@@ -259,7 +266,7 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
 
     return SafeArea(
         child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: BlocBuilder<PlaylistBloc, PlaylistState>(
                 builder: (context, state) {
               return buildPageContent(context, state);

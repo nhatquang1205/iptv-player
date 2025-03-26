@@ -57,9 +57,8 @@ class _SplashScreenState extends State<SplashScreen> {
               // ignore: use_build_context_synchronously
               context,
               MaterialPageRoute(
-                  builder: (context) => isExists
-                      ? MyHomePage(title: 'IPTV Player HomePage')
-                      : LanguageWidget()),
+                  builder: (context) =>
+                      isExists ? MyHomePage() : LanguageWidget()),
               (route) => false,
             );
           }
@@ -80,9 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
-              builder: (context) => isExists
-                  ? MyHomePage(title: 'IPTV Player HomePage')
-                  : LanguageWidget()),
+              builder: (context) => isExists ? MyHomePage() : LanguageWidget()),
           (route) => false,
         );
         ad.dispose();

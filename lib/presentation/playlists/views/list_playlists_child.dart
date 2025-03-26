@@ -4,7 +4,7 @@ import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/data/models/playlist.dart';
 import 'package:iptv_player/data/repositories/channel_repository.dart';
 import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
-import 'package:iptv_player/presentation/channel/view/list_channels.dart';
+import 'package:iptv_player/presentation/channel/view/all_channels.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -57,16 +57,14 @@ class _ListPlaylistsChildState extends State<ListPlaylistsChild> {
                                 MaterialPageRoute(builder: (context) {
                               return BlocProvider(
                                 create: (context) => ChannelBloc(
-                                    channelRepository: ChannelRepository())
-                                  ..add(ChannelLoad(playlistId: playlist.id)),
+                                    channelRepository: ChannelRepository()),
                                 child: Theme(
                                     data: Theme.of(context),
-                                    child: ListChannelsPage(
-                                        playlistName: playlist.name,
-                                        playlistId: playlist.id,
-                                        videoCount: playlist.childCount!,
-                                        avatarIcon: playlist.avatarIcon,
-                                        avatarColor: playlist.avatarColor)),
+                                    child: ListAllChannelsPage(
+                                      playlistName: playlist.name,
+                                      playlistId: playlist.id,
+                                      videoCount: playlist.childCount!,
+                                    )),
                               );
                             })),
                           }
