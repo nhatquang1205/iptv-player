@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/data/models/playlist.dart';
 import 'package:iptv_player/data/repositories/channel_repository.dart';
+import 'package:iptv_player/l10n/app_localizations.dart';
 import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
 import 'package:iptv_player/presentation/channel/view/all_channels.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListPlaylistsChild extends StatefulWidget {
   final int parentId;

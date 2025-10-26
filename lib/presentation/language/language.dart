@@ -4,6 +4,7 @@ import 'package:iptv_player/common/widgets/native_ad.dart';
 import 'package:iptv_player/main.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
 import 'package:iptv_player/presentation/language/language_card.dart';
+import 'package:iptv_player/presentation/onboarding/onboarding_page.dart';
 
 class LanguageWidget extends StatefulWidget {
   @override
@@ -68,13 +69,24 @@ class _LanguageWidgetState extends State<LanguageWidget> {
           actions: [
             selectedLocale != ''
                 ? IconButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      final navigator = Navigator.of(context);
                       MyApp.setLocale(context, Locale(selectedLocale!));
-                      setLocale(selectedLocale!);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyHomePage()));
+                      await setLocale(selectedLocale!);
+
+                      // Check if onboarding is completed
+                      bool onboardingCompleted = await isOnboardingCompleted();
+
+                      // Navigate to appropriate page
+                      Widget nextPage = onboardingCompleted
+                          ? MyHomePage()
+                          : OnboardingPage();
+
+                      if (mounted) {
+                        navigator.pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => nextPage));
+                      }
                     },
                     icon: Icon(Icons.check),
                     color: Theme.of(context).primaryColor,

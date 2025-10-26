@@ -9,18 +9,30 @@ import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
 class ChannelSelector extends StatelessWidget {
   final Channel channel;
   final VoidCallback onChannelSelected;
+  final bool isSelected;
 
   const ChannelSelector({
     super.key,
     required this.channel,
     required this.onChannelSelected,
+    this.isSelected = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: isSelected
+          ? Theme.of(context).colorScheme.primaryContainer
+          : null,
+      elevation: isSelected ? 4 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
+        side: isSelected
+            ? BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              )
+            : BorderSide.none,
       ),
       child: InkWell(
         onTap: () {

@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:iptv_player/l10n/app_localizations.dart';
 
 const String LANGUAGE = 'languageCode';
+const String ONBOARDING_COMPLETED = 'onboardingCompleted';
 
 //languages code
 const String ENGLISH = 'en';
@@ -64,4 +65,15 @@ Locale _locale(String languageCode) {
 
 AppLocalizations translation(BuildContext context) {
   return AppLocalizations.of(context)!;
+}
+
+// Onboarding helpers
+Future<bool> isOnboardingCompleted() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getBool(ONBOARDING_COMPLETED) ?? false;
+}
+
+Future<void> setOnboardingCompleted() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  await pref.setBool(ONBOARDING_COMPLETED, true);
 }

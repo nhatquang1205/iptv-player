@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_cubit.dart';
 import 'package:iptv_player/presentation/playlists/views/add_playlist.dart';
+import 'package:iptv_player/presentation/playlists/views/play_single_stream_dialog.dart';
 
 class AddPlaylistMenu extends StatelessWidget {
   final VoidCallback? onBottomSheetClosed;
@@ -29,7 +30,7 @@ class AddPlaylistMenu extends StatelessWidget {
                           type: typeOfAddPlaylist,
                         ),
                       )
-                    : Container();
+                    : const PlaySingleStreamDialog();
               });
         });
 

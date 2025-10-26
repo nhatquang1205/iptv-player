@@ -23,41 +23,65 @@ class VideoPlayPage extends StatefulWidget {
 }
 
 class _VideoPlayPageState extends State<VideoPlayPage> {
-  late CustomVideoPlayerController _customVideoPlayerController;
+  CustomVideoPlayerController? _customVideoPlayerController;
+  VideoPlayerController? _videoPlayerController;
   bool _isLoading = false;
   Channel? _selectedChannel;
 
-  void initializeVideoPlayer() {
+  void initializeVideoPlayer(String videoUrl, VideoType videoType) {
     setState(() {
       _isLoading = true;
-      _selectedChannel = widget.selectedChannel;
     });
-    VideoPlayerController _videoPlayerController;
-    if (widget.videoType == VideoType.network) {
+
+    // Dispose previous controllers if they exist
+    _customVideoPlayerController?.dispose();
+    _videoPlayerController?.dispose();
+
+    if (videoType == VideoType.network) {
       _videoPlayerController =
-          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+          VideoPlayerController.networkUrl(Uri.parse(videoUrl));
     } else {
       _videoPlayerController =
-          VideoPlayerController.file(File(widget.videoUrl));
+          VideoPlayerController.file(File(videoUrl));
     }
-    _videoPlayerController.initialize().then((_) {
+
+    _videoPlayerController!.initialize().then((_) {
       setState(() {
         _isLoading = false;
       });
     });
+
     _customVideoPlayerController = CustomVideoPlayerController(
-        context: context, videoPlayerController: _videoPlayerController);
+        context: context, videoPlayerController: _videoPlayerController!);
+  }
+
+  void switchChannel(Channel channel) {
+    setState(() {
+      _selectedChannel = channel;
+    });
+
+    final videoType = channel.url.startsWith("http")
+        ? VideoType.network
+        : VideoType.file;
+
+    initializeVideoPlayer(channel.url, videoType);
   }
 
   @override
   void initState() {
     super.initState();
-    initializeVideoPlayer();
+    _selectedChannel = widget.selectedChannel;
+    initializeVideoPlayer(widget.videoUrl, widget.videoType);
   }
 
   @override
   void dispose() {
-    _customVideoPlayerController.dispose();
+    if (_customVideoPlayerController != null) {
+      _customVideoPlayerController!.dispose();
+    }
+    if (_videoPlayerController != null) {
+      _videoPlayerController!.dispose();
+    }
     super.dispose();
   }
 
@@ -73,7 +97,7 @@ class _VideoPlayPageState extends State<VideoPlayPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _isLoading
+            _isLoading || _customVideoPlayerController == null
                 ? SizedBox(
                     height: 230,
                     child: Center(
@@ -81,33 +105,49 @@ class _VideoPlayPageState extends State<VideoPlayPage> {
                     ),
                   )
                 : CustomVideoPlayer(
-                    customVideoPlayerController: _customVideoPlayerController),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height - 350,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                        children: context
-                            .read<ChannelBloc>()
-                            .state
-                            .channels
-                            .map((channel) {
-                      return Padding(
-                          padding: EdgeInsets.only(bottom: 8),
-                          child: ChannelSelector(
-                            channel: channel,
-                            onChannelSelected: () {
-                              setState(() {
-                                _selectedChannel = channel;
-                              });
-                            },
-                          ));
-                    }).toList())),
-              ),
+                    customVideoPlayerController: _customVideoPlayerController!),
+            BlocBuilder<ChannelBloc, ChannelState>(
+              builder: (context, channelState) {
+                if (channelState.channels.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Related Channels',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          itemCount: channelState.channels.length,
+                          itemBuilder: (context, index) {
+                            final channel = channelState.channels[index];
+                            final isSelected = _selectedChannel?.id == channel.id;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: ChannelSelector(
+                                channel: channel,
+                                isSelected: isSelected,
+                                onChannelSelected: () {
+                                  switchChannel(channel);
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ));
