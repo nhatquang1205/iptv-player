@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iptv_player/common/widgets/video_card.dart';
 import 'package:iptv_player/data/models/channel.dart';
 import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:iptv_player/l10n/app_localizations.dart';
 import 'package:iptv_player/presentation/video_player/video_play_page.dart';
 
 class ListAllChannelsPage extends StatefulWidget {

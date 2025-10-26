@@ -5,10 +5,10 @@ import 'package:iptv_player/common/constants/language_constants.dart';
 import 'package:iptv_player/data/models/playlist.dart';
 import 'package:iptv_player/data/repositories/channel_repository.dart';
 import 'package:iptv_player/data/repositories/playlist_repository.dart';
+import 'package:iptv_player/l10n/app_localizations.dart';
 import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
 import 'package:iptv_player/presentation/channel/view/all_channels.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iptv_player/presentation/playlists/views/list_playlists_child.dart';
 
 class ListPlaylistsPage extends StatefulWidget {

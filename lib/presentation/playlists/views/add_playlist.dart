@@ -12,14 +12,11 @@ import 'package:http/http.dart' as http;
 import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/data/models/channel.dart';
 import 'package:iptv_player/data/models/playlist.dart';
-import 'package:iptv_player/data/repositories/playlist_repository.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
-import 'package:iptv_player/presentation/playlists/bloc/playlist_bloc.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_cubit.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:iptv_player/presentation/playlists/views/list_playlists.dart';
+import 'package:iptv_player/l10n/app_localizations.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -181,7 +178,7 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
           widget.type.type == TypeOfAddPlaylistEnum.uploadFromFiles) {
         for (var channel in state.channels!) {
           final Directory appDir = await getApplicationDocumentsDirectory();
-          final String fileName = basename(channel.url);
+          final String fileName = path.basename(channel.url);
           final String savedPath = '${appDir.path}/$fileName';
 
           final File savedVideo = state.files.firstWhere(
@@ -197,7 +194,7 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
 
             if (thumbnailPath != null && thumbnailPath.isNotEmpty) {
               final thumbnailFile = File(thumbnailPath);
-              final String baseThumbnailPath = basename(thumbnailPath);
+              final String baseThumbnailPath = path.basename(thumbnailPath);
               final String thumbnailSavedPath =
                   '${appDir.path}/$baseThumbnailPath';
               await thumbnailFile.copy(thumbnailSavedPath);
@@ -212,54 +209,83 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
         var filePath =
             await downloadAndSaveFile(state.url!, state.url!.split('/').last);
 
-        final m3uList = await M3uList.loadFromFile(filePath!);
-        if (m3uList.groupTitles.isNotEmpty) {
-          var childrenPlaylist = <Playlist>[];
-          for (var group in m3uList.groupTitles) {
-            final childPlaylist = Playlist(
-              name: group,
-              thumbnail: '',
-              createdAt: DateTime.now(),
-              avatarIcon: "0xe380",
-              avatarColor: "0xFF64B5F6",
-              isUsePassCode: false,
-              type: PlaylistType.files,
-              children: [],
-              channels: [],
-            );
-            childrenPlaylist.add(childPlaylist);
-          }
-          for (var item in m3uList.items) {
-            final channel = Channel(
-              title: item.title,
-              url: item.link,
-              thumbnail: item.attributes['tvg-logo'] ?? '',
-              duration: 0,
-              createdAt: DateTime.now(),
-              isFavorite: false,
-            );
-            childrenPlaylist
-                .where((element) => element.name == item.groupTitle)
-                .first
-                .channels!
-                .add(channel);
-          }
-          context.read<PlaylistCubit>().addChildrenPlaylist(childrenPlaylist);
-        } else {
-          for (var item in m3uList.items) {
-            final channel = Channel(
-              title: item.title,
-              url: item.link,
-              thumbnail: '',
-              duration: 0,
-              createdAt: DateTime.now(),
-              isFavorite: false,
-            );
-            context.read<PlaylistCubit>().addChannel(channel);
-          }
+        if (filePath == null) {
+          setState(() {
+            isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to download playlist. Please check the URL and try again.'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+          return;
         }
 
-        await deleteFile(filePath);
+        try {
+          final m3uList = await M3uList.loadFromFile(filePath);
+          if (m3uList.groupTitles.isNotEmpty) {
+            var childrenPlaylist = <Playlist>[];
+            for (var group in m3uList.groupTitles) {
+              final childPlaylist = Playlist(
+                name: group,
+                thumbnail: '',
+                createdAt: DateTime.now(),
+                avatarIcon: "0xe380",
+                avatarColor: "0xFF64B5F6",
+                isUsePassCode: false,
+                type: PlaylistType.files,
+                children: [],
+                channels: [],
+              );
+              childrenPlaylist.add(childPlaylist);
+            }
+            for (var item in m3uList.items) {
+              final channel = Channel(
+                title: item.title,
+                url: item.link,
+                thumbnail: item.attributes['tvg-logo'] ?? '',
+                duration: 0,
+                createdAt: DateTime.now(),
+                isFavorite: false,
+              );
+              childrenPlaylist
+                  .where((element) => element.name == item.groupTitle)
+                  .first
+                  .channels!
+                  .add(channel);
+            }
+            context.read<PlaylistCubit>().addChildrenPlaylist(childrenPlaylist);
+          } else {
+            for (var item in m3uList.items) {
+              final channel = Channel(
+                title: item.title,
+                url: item.link,
+                thumbnail: '',
+                duration: 0,
+                createdAt: DateTime.now(),
+                isFavorite: false,
+              );
+              context.read<PlaylistCubit>().addChannel(channel);
+            }
+          }
+
+          await deleteFile(filePath);
+        } catch (e) {
+          setState(() {
+            isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to parse playlist file. Please ensure it\'s a valid M3U file.'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+          await deleteFile(filePath);
+          return;
+        }
       }
 
       if (widget.type.type == TypeOfAddPlaylistEnum.uploadM3UFile) {

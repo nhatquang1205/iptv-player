@@ -4,6 +4,7 @@ import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/common/constants/language_constants.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
 import 'package:iptv_player/presentation/language/language.dart';
+import 'package:iptv_player/presentation/onboarding/onboarding_page.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({super.key});
@@ -14,6 +15,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // DEBUG: Set to true to always show tutorial on app start for testing
+  // ignore: constant_identifier_names
+  static const bool DEBUG_ALWAYS_SHOW_TUTORIAL = true;
+
   @override
   void initState() {
     _createInterstitialAd();
@@ -53,12 +58,21 @@ class _SplashScreenState extends State<SplashScreen> {
             _createInterstitialAd();
           } else {
             var isExists = await isLocaleExists();
+            var onboardingCompleted = await isOnboardingCompleted();
+
+            Widget nextPage;
+            if (!isExists) {
+              nextPage = LanguageWidget();
+            } else if (DEBUG_ALWAYS_SHOW_TUTORIAL || !onboardingCompleted) {
+              nextPage = OnboardingPage();
+            } else {
+              nextPage = MyHomePage();
+            }
+
             Navigator.pushAndRemoveUntil(
               // ignore: use_build_context_synchronously
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      isExists ? MyHomePage() : LanguageWidget()),
+              MaterialPageRoute(builder: (context) => nextPage),
               (route) => false,
             );
           }
@@ -75,11 +89,21 @@ class _SplashScreenState extends State<SplashScreen> {
     _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (InterstitialAd ad) async {
         var isExists = await isLocaleExists();
+        var onboardingCompleted = await isOnboardingCompleted();
+
+        Widget nextPage;
+        if (!isExists) {
+          nextPage = LanguageWidget();
+        } else if (DEBUG_ALWAYS_SHOW_TUTORIAL || !onboardingCompleted) {
+          nextPage = OnboardingPage();
+        } else {
+          nextPage = MyHomePage();
+        }
+
         Navigator.pushAndRemoveUntil(
           // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(
-              builder: (context) => isExists ? MyHomePage() : LanguageWidget()),
+          MaterialPageRoute(builder: (context) => nextPage),
           (route) => false,
         );
         ad.dispose();

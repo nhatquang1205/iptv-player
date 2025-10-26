@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:iptv_player/l10n/app_localizations.dart';
 
 final class NavBarIconConstants {
   static const List<String> iconPaths = [
