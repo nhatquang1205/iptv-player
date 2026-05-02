@@ -19,8 +19,8 @@ class PlaylistCubit extends Cubit<Playlist> {
             channels: [],
             type: type));
 
-  savePlaylist() async {
-    await _playlistRepository.addPlaylist(state);
+  Future<int> savePlaylist() async {
+    return await _playlistRepository.addPlaylist(state);
   }
 
   addSelectedFiles(List<File> files) {

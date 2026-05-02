@@ -127,10 +127,164 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
       });
     }
 
+    Widget buildStep(BuildContext context, int number, String title, String description) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                '$number',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Icon(
+            Icons.info_outline,
+            size: 20,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+          ),
+        ],
+      );
+    }
+
+    Widget buildEmptyState(BuildContext context) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Illustration
+              Container(
+                width: 200,
+                height: 150,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      Icons.play_circle_outline,
+                      size: 80,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    Positioned(
+                      top: 20,
+                      right: 40,
+                      child: Icon(
+                        Icons.favorite,
+                        size: 30,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+              // Title
+              Text(
+                translation(context).emptyPlaylistTitle,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              // Steps
+              buildStep(context, 1, translation(context).emptyPlaylistStep1Title,
+                  translation(context).emptyPlaylistStep1Desc),
+              const SizedBox(height: 16),
+              buildStep(context, 2, translation(context).emptyPlaylistStep2Title,
+                  translation(context).emptyPlaylistStep2Desc),
+              const SizedBox(height: 16),
+              buildStep(context, 3, translation(context).emptyPlaylistStep3Title,
+                  translation(context).emptyPlaylistStep3Desc),
+              const SizedBox(height: 16),
+              buildStep(context, 4, translation(context).emptyPlaylistStep4Title,
+                  translation(context).emptyPlaylistStep4Desc),
+              const SizedBox(height: 32),
+              // Terms notice
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        translation(context).emptyPlaylistTerms,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     Widget buildListPlaylists(context, state) {
       if (state.status == PlaylistStatus.loading) {
         return const Center(child: CircularProgressIndicator());
       } else if (state.status == PlaylistStatus.success) {
+        // Show empty state if no playlists
+        if (state.playlists.isEmpty) {
+          return buildEmptyState(context);
+        }
+
         return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -145,6 +299,7 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
               final playlist = state.playlists[index] as Playlist;
               return Card(
                 child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () => {
                     if (playlist.type == PlaylistType.library ||
                         (playlist.type == PlaylistType.files &&
@@ -193,21 +348,25 @@ class _ListPlaylistsPageState extends State<ListPlaylistsPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              playlist.url != '' && playlist.url != null
-                                  ? CircleAvatar(
-                                      radius: 24,
-                                      backgroundColor: Color(
-                                          int.parse(playlist.avatarColor)),
-                                      child: Icon(IconData(
-                                          int.parse(playlist.avatarIcon),
-                                          fontFamily: 'MaterialIcons')))
-                                  : CircleAvatar(
-                                      radius: 24,
-                                      backgroundColor: Color(
-                                          int.parse(playlist.avatarColor)),
-                                      child: Icon(IconData(
-                                          int.parse(playlist.avatarIcon),
-                                          fontFamily: 'MaterialIcons'))),
+                              Builder(
+                                builder: (context) {
+                                  final iconData = IconData(
+                                    int.parse(playlist.avatarIcon),
+                                    fontFamily: 'MaterialIcons',
+                                  );
+                                  return playlist.url != '' && playlist.url != null
+                                      ? CircleAvatar(
+                                          radius: 24,
+                                          backgroundColor: Color(
+                                              int.parse(playlist.avatarColor)),
+                                          child: Icon(iconData))
+                                      : CircleAvatar(
+                                          radius: 24,
+                                          backgroundColor: Color(
+                                              int.parse(playlist.avatarColor)),
+                                          child: Icon(iconData));
+                                },
+                              ),
                               GestureDetector(
                                 onTapDown: (details) => showActionMenu(
                                     context, details, playlist.id),

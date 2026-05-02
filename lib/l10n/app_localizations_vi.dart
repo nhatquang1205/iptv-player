@@ -89,4 +89,43 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get delete => 'Xoá';
+
+  @override
+  String get emptyPlaylistTitle => 'Cách thêm một danh sách phát';
+
+  @override
+  String get emptyPlaylistStep1Title => 'Tìm danh sách phát M3U';
+
+  @override
+  String get emptyPlaylistStep1Desc => 'Tìm kiếm trực tuyến danh sách phát IPTV công khai (M3U)';
+
+  @override
+  String get emptyPlaylistStep2Title => 'Sao chép liên kết hoặc tải xuống';
+
+  @override
+  String get emptyPlaylistStep2Desc => 'Sao chép liên kết danh sách phát hoặc tải xuống tệp .m3u';
+
+  @override
+  String get emptyPlaylistStep3Title => 'Nhập danh sách phát vào ứng dụng';
+
+  @override
+  String get emptyPlaylistStep3Desc => 'Trong ứng dụng: Thêm danh sách phát → Nhập URL → Dán liên kết';
+
+  @override
+  String get emptyPlaylistStep4Title => 'Bắt đầu xem';
+
+  @override
+  String get emptyPlaylistStep4Desc => 'Mở danh sách phát và thưởng thức các kênh của bạn';
+
+  @override
+  String get emptyPlaylistTerms => 'Khi dùng ứng dụng này, bạn đồng ý với Điều khoản dịch vụ';
+
+  @override
+  String get emptyChannelMessage => 'Chưa có kênh nào';
+
+  @override
+  String get howToAddChannels => 'Cách thêm kênh';
+
+  @override
+  String get done => 'Xong!';
 }

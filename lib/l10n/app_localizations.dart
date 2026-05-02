@@ -262,8 +262,86 @@ abstract class AppLocalizations {
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:
-  /// **'Xoá'**
+  /// **'Delete'**
   String get delete;
+
+  /// No description provided for @emptyPlaylistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to add a playlist'**
+  String get emptyPlaylistTitle;
+
+  /// No description provided for @emptyPlaylistStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Find M3U playlist'**
+  String get emptyPlaylistStep1Title;
+
+  /// No description provided for @emptyPlaylistStep1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for public IPTV playlists online (M3U)'**
+  String get emptyPlaylistStep1Desc;
+
+  /// No description provided for @emptyPlaylistStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link or download'**
+  String get emptyPlaylistStep2Title;
+
+  /// No description provided for @emptyPlaylistStep2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the playlist link or download the .m3u file'**
+  String get emptyPlaylistStep2Desc;
+
+  /// No description provided for @emptyPlaylistStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter playlist into app'**
+  String get emptyPlaylistStep3Title;
+
+  /// No description provided for @emptyPlaylistStep3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'In app: Add playlist → Enter URL → Paste link'**
+  String get emptyPlaylistStep3Desc;
+
+  /// No description provided for @emptyPlaylistStep4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Start watching'**
+  String get emptyPlaylistStep4Title;
+
+  /// No description provided for @emptyPlaylistStep4Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Open playlist and enjoy your channels'**
+  String get emptyPlaylistStep4Desc;
+
+  /// No description provided for @emptyPlaylistTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'When using this app, you agree to our Terms of Service'**
+  String get emptyPlaylistTerms;
+
+  /// No description provided for @emptyChannelMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no channels yet'**
+  String get emptyChannelMessage;
+
+  /// No description provided for @howToAddChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'How to Add Channels'**
+  String get howToAddChannels;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done!'**
+  String get done;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

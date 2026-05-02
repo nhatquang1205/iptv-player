@@ -5,15 +5,11 @@ final class NavBarIconConstants {
   static const List<String> iconPaths = [
     'assets/icons/LiveTV.svg',
     'assets/icons/Cast.svg',
-    'assets/icons/TV.svg',
-    'assets/icons/Settings.svg',
   ];
 
   static const List<String> iconLabels = [
     'Home',
     'Channel',
-    'XTream',
-    'Setting',
   ];
 
   static String getLocalizeLabel(int index, BuildContext context) {
@@ -22,10 +18,6 @@ final class NavBarIconConstants {
         return AppLocalizations.of(context)?.home ?? '';
       case 1:
         return AppLocalizations.of(context)?.channels ?? '';
-      case 2:
-        return AppLocalizations.of(context)?.xtream ?? '';
-      case 3:
-        return AppLocalizations.of(context)?.settings ?? '';
       default:
         return '';
     }

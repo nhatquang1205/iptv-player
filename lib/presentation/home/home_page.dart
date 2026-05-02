@@ -70,8 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 playlistId: null,
               ),
             )),
-        const Center(child: Text('XTream Page')),
-        const SettingListPage(),
       ],
     );
   }
@@ -94,6 +92,22 @@ class _MyHomePageState extends State<MyHomePage> {
               centerTitle: true,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingListPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,

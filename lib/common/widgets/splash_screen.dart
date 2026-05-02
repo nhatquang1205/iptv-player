@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// COMMENTED OUT - TEMPORARILY DISABLED ADS
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/common/constants/language_constants.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
@@ -21,22 +22,53 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _createInterstitialAd();
+    // COMMENTED OUT - TEMPORARILY DISABLED ADS
+    // _createInterstitialAd();
+    _navigateToNextPage();
     super.initState();
   }
 
   @override
   void dispose() {
-    _interstitialAd?.dispose();
+    // COMMENTED OUT - TEMPORARILY DISABLED ADS
+    // _interstitialAd?.dispose();
     super.dispose();
   }
 
-  InterstitialAd? _interstitialAd;
-  int _numInterstitialLoadAttempts = 0;
-  int maxFailedLoadAttempts = 1;
-  bool isUseSecondAdUnit = false;
-  String adUnitId = "ca-app-pub-1009785731919817/9736327161";
+  // COMMENTED OUT - TEMPORARILY DISABLED ADS
+  // InterstitialAd? _interstitialAd;
+  // int _numInterstitialLoadAttempts = 0;
+  // int maxFailedLoadAttempts = 1;
+  // bool isUseSecondAdUnit = false;
+  // String adUnitId = "ca-app-pub-1009785731919817/9736327161";
 
+  void _navigateToNextPage() async {
+    // Add a small delay to show splash screen
+    await Future.delayed(Duration(seconds: 1));
+
+    var isExists = await isLocaleExists();
+    var onboardingCompleted = await isOnboardingCompleted();
+
+    Widget nextPage;
+    if (!isExists) {
+      nextPage = LanguageWidget();
+    } else if (DEBUG_ALWAYS_SHOW_TUTORIAL || !onboardingCompleted) {
+      nextPage = OnboardingPage();
+    } else {
+      nextPage = MyHomePage();
+    }
+
+    if (mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => nextPage),
+        (route) => false,
+      );
+    }
+  }
+
+  // COMMENTED OUT - TEMPORARILY DISABLED ADS
+  /*
   void _createInterstitialAd() {
     InterstitialAd.load(
       adUnitId: adUnitId,
@@ -112,6 +144,7 @@ class _SplashScreenState extends State<SplashScreen> {
     _interstitialAd!.show();
     _interstitialAd = null;
   }
+  */
 
   @override
   Widget build(BuildContext context) {

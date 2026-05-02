@@ -6,6 +6,7 @@ import 'package:iptv_player/l10n/app_localizations.dart';
 
 const String LANGUAGE = 'languageCode';
 const String ONBOARDING_COMPLETED = 'onboardingCompleted';
+const String LICENSE_ACCEPTED = 'licenseAccepted';
 
 //languages code
 const String ENGLISH = 'en';
@@ -76,4 +77,15 @@ Future<bool> isOnboardingCompleted() async {
 Future<void> setOnboardingCompleted() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   await pref.setBool(ONBOARDING_COMPLETED, true);
+}
+
+// License agreement helpers
+Future<bool> isLicenseAccepted() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getBool(LICENSE_ACCEPTED) ?? false;
+}
+
+Future<void> setLicenseAccepted() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  await pref.setBool(LICENSE_ACCEPTED, true);
 }

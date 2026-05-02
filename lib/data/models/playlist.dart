@@ -62,7 +62,7 @@ class Playlist {
       'name': name,
       'avatar_icon': avatarIcon,
       'avatar_color': avatarColor,
-      'is_use_passcode': isUsePassCode,
+      'is_use_passcode': isUsePassCode ? 1 : 0,
       'passcode': passCode,
       'created_at': createdAt.toIso8601String(),
       'url': url,

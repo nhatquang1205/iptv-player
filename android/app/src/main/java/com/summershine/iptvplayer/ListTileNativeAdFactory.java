@@ -1,6 +1,6 @@
 // TODO: Implement ListTileNativeAdFactory class
 
-package com.kingmango.iptvplayer;
+package com.summershine.iptvplayer;
 
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;

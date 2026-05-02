@@ -10,10 +10,18 @@ plugins {
 
 dependencies {
     implementation 'com.google.android.gms:play-services-ads:23.0.0'
+    implementation platform('com.google.firebase:firebase-bom:34.5.0')
+    implementation 'com.google.firebase:firebase-analytics'
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
-    namespace = "com.kingmango.iptvplayer"
+    namespace = "com.summershine.iptvplayer"
     compileSdk 36
     ndkVersion = flutter.ndkVersion
 
@@ -28,7 +36,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.kingmango.iptvplayer"
+        applicationId "com.summershine.iptvplayer"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdkVersion 28
@@ -40,16 +48,19 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(System.getenv("STORE_FILE") ?: "my-release-key.jks")
-            storePassword System.getenv("STORE_PASSWORD") ?: "Quangdep123@"
-            keyAlias System.getenv("KEY_ALIAS") ?: "my-key-alias"
-            keyPassword System.getenv("KEY_PASSWORD") ?: "Quangdep123@"
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
     }
     buildTypes {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
     }
 }
