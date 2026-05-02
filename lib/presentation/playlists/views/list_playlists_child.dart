@@ -47,6 +47,7 @@ class _ListPlaylistsChildState extends State<ListPlaylistsChild> {
                   final playlist = state.playlists[index] as Playlist;
                   return Card(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
                       onTap: () => {
                         if (playlist.type == PlaylistType.library ||
                             (playlist.type == PlaylistType.files &&
@@ -74,21 +75,25 @@ class _ListPlaylistsChildState extends State<ListPlaylistsChild> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            playlist.url != '' && playlist.url != null
-                                ? CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor:
-                                        Color(int.parse(playlist.avatarColor)),
-                                    child: Icon(IconData(
-                                        int.parse(playlist.avatarIcon),
-                                        fontFamily: 'MaterialIcons')))
-                                : CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor:
-                                        Color(int.parse(playlist.avatarColor)),
-                                    child: Icon(IconData(
-                                        int.parse(playlist.avatarIcon),
-                                        fontFamily: 'MaterialIcons'))),
+                            Builder(
+                              builder: (context) {
+                                final iconData = IconData(
+                                  int.parse(playlist.avatarIcon),
+                                  fontFamily: 'MaterialIcons',
+                                );
+                                return playlist.url != '' && playlist.url != null
+                                    ? CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor:
+                                            Color(int.parse(playlist.avatarColor)),
+                                        child: Icon(iconData))
+                                    : CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor:
+                                            Color(int.parse(playlist.avatarColor)),
+                                        child: Icon(iconData));
+                              },
+                            ),
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iptv_player/common/constants/language_constants.dart';
-import 'package:iptv_player/common/widgets/native_ad.dart';
+// COMMENTED OUT - TEMPORARILY DISABLED ADS
+// import 'package:iptv_player/common/widgets/native_ad.dart';
 import 'package:iptv_player/main.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
 import 'package:iptv_player/presentation/language/language_card.dart';
@@ -104,6 +105,8 @@ class _LanguageWidgetState extends State<LanguageWidget> {
                 ),
                 child: buildLanguageList(),
               ),
+              // COMMENTED OUT - TEMPORARILY DISABLED ADS
+              /*
               Align(
                 alignment: Alignment.bottomCenter,
                 child: selectedLocale == ''
@@ -116,6 +119,7 @@ class _LanguageWidgetState extends State<LanguageWidget> {
                         fallbackAdUnitId:
                             'ca-app-pub-1009785731919817/1857837146'),
               )
+              */
             ],
           ),
         ));

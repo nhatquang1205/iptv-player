@@ -1,4 +1,4 @@
-package com.kingmango.iptvplayer
+package com.summershine.iptvplayer
 
 import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity

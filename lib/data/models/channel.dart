@@ -41,7 +41,7 @@ class Channel {
       'thumbnail': thumbnail,
       'duration': duration,
       'created_at': createdAt.toIso8601String(),
-      'is_favorite': isFavorite,
+      'is_favorite': isFavorite ? 1 : 0,
     };
   }
 }

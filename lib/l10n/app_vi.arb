@@ -24,5 +24,18 @@
     "searchChannel": "Tìm kiếm kênh",
     "recent": "Gần đây",
     "favorite": "Yêu thích",
-    "delete": "Xoá"
+    "delete": "Xoá",
+    "emptyPlaylistTitle": "Cách thêm danh sách phát",
+    "emptyPlaylistStep1Title": "Tìm danh sách phát M3U",
+    "emptyPlaylistStep1Desc": "Tìm kiếm trực tuyến danh sách phát IPTV công khai (M3U)",
+    "emptyPlaylistStep2Title": "Sao chép liên kết hoặc tải xuống",
+    "emptyPlaylistStep2Desc": "Sao chép liên kết danh sách phát hoặc tải xuống tệp .m3u",
+    "emptyPlaylistStep3Title": "Nhập danh sách phát vào ứng dụng",
+    "emptyPlaylistStep3Desc": "Trong ứng dụng: Thêm danh sách phát → Nhập URL → Dán liên kết",
+    "emptyPlaylistStep4Title": "Bắt đầu xem",
+    "emptyPlaylistStep4Desc": "Mở danh sách phát và thưởng thức các kênh của bạn",
+    "emptyPlaylistTerms": "Khi dùng ứng dụng này, bạn đồng ý với Điều khoản dịch vụ",
+    "emptyChannelMessage": "Chưa có kênh nào",
+    "howToAddChannels": "Cách thêm kênh",
+    "done": "Xong!"
 }

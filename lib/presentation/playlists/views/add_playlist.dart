@@ -12,8 +12,12 @@ import 'package:http/http.dart' as http;
 import 'package:iptv_player/common/constants/constants.dart';
 import 'package:iptv_player/data/models/channel.dart';
 import 'package:iptv_player/data/models/playlist.dart';
+import 'package:iptv_player/data/repositories/channel_repository.dart';
+import 'package:iptv_player/data/repositories/playlist_repository.dart';
+import 'package:iptv_player/presentation/channel/bloc/channel_bloc.dart';
 import 'package:iptv_player/presentation/home/home_page.dart';
 import 'package:iptv_player/presentation/playlists/bloc/playlist_cubit.dart';
+import 'package:iptv_player/presentation/video_player/video_play_page.dart';
 import 'package:iptv_player/l10n/app_localizations.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:path/path.dart' as path;
@@ -340,13 +344,61 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
         }
       }
 
-      await context.read<PlaylistCubit>().savePlaylist();
+      // Save playlist and get the newly created playlist ID
+      final playlistId = await context.read<PlaylistCubit>().savePlaylist();
+
       setState(() {
         isLoading = false;
       });
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-      );
+
+      if (!mounted) return;
+
+      // Get the current playlist state which contains children info
+      final playlistState = context.read<PlaylistCubit>().state;
+      final playlistRepository = PlaylistRepository();
+      int? targetPlaylistId = playlistId;
+
+      // Check if playlist has children (like M3U groups)
+      if (playlistState.children != null && playlistState.children!.isNotEmpty) {
+        // Get child playlists from database to get their IDs
+        final childPlaylists = await playlistRepository.getPlaylistsByParentId(playlistId);
+        if (childPlaylists.isNotEmpty) {
+          // Use first child's ID as target
+          targetPlaylistId = childPlaylists.first.id;
+        }
+      }
+
+      // Load channels from the target playlist (either main or first child)
+      final channelRepository = ChannelRepository();
+      final channels = await channelRepository.getChannels(targetPlaylistId);
+
+      // If there are channels, navigate to video player with first channel
+      if (channels.isNotEmpty && mounted) {
+        final firstChannel = channels.first;
+        final videoType = firstChannel.url.startsWith("http")
+            ? VideoType.network
+            : VideoType.file;
+
+        // Navigate to video player and auto-play first channel
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => BlocProvider(
+              create: (_) => ChannelBloc(channelRepository: channelRepository)
+                ..add(ChannelLoad(playlistId: targetPlaylistId)),
+              child: VideoPlayPage(
+                selectedChannel: firstChannel,
+                videoUrl: firstChannel.url,
+                videoType: videoType,
+              ),
+            ),
+          ),
+        );
+      } else {
+        // No channels, just go to home page
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+        );
+      }
     }
 
     return Scaffold(
@@ -375,11 +427,12 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
         resizeToAvoidBottomInset: true,
         body: isLoading
             ? Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     Text(
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             fontSize: 18,
@@ -469,13 +522,19 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
                             children: [
                               Center(
                                 child: state.avatarIcon != ''
-                                    ? CircleAvatar(
-                                        radius: 32,
-                                        backgroundColor:
-                                            Color(int.parse(state.avatarColor)),
-                                        child: Icon(IconData(
+                                    ? Builder(
+                                        builder: (context) {
+                                          final iconData = IconData(
                                             int.parse(state.avatarIcon),
-                                            fontFamily: 'MaterialIcons')),
+                                            fontFamily: 'MaterialIcons',
+                                          );
+                                          return CircleAvatar(
+                                            radius: 32,
+                                            backgroundColor:
+                                                Color(int.parse(state.avatarColor)),
+                                            child: Icon(iconData),
+                                          );
+                                        },
                                       )
                                     : CircleAvatar(
                                         radius: 32,
@@ -545,7 +604,9 @@ class _AddPlaylistViewState extends State<AddPlaylistView> {
                             ],
                           )
                         : SizedBox(),
-                  ],
-                )));
+                    ],
+                  ),
+                ),
+              ));
   }
 }

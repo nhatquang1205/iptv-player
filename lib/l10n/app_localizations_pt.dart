@@ -101,4 +101,43 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get delete => 'Xoá';
+
+  @override
+  String get emptyPlaylistTitle => 'How to add a playlist';
+
+  @override
+  String get emptyPlaylistStep1Title => 'Find M3U playlist';
+
+  @override
+  String get emptyPlaylistStep1Desc => 'Search for public IPTV playlists online (M3U)';
+
+  @override
+  String get emptyPlaylistStep2Title => 'Copy link or download';
+
+  @override
+  String get emptyPlaylistStep2Desc => 'Copy the playlist link or download the .m3u file';
+
+  @override
+  String get emptyPlaylistStep3Title => 'Enter playlist into app';
+
+  @override
+  String get emptyPlaylistStep3Desc => 'In app: Add playlist → Enter URL → Paste link';
+
+  @override
+  String get emptyPlaylistStep4Title => 'Start watching';
+
+  @override
+  String get emptyPlaylistStep4Desc => 'Open playlist and enjoy your channels';
+
+  @override
+  String get emptyPlaylistTerms => 'When using this app, you agree to our Terms of Service';
+
+  @override
+  String get emptyChannelMessage => 'There are no channels yet';
+
+  @override
+  String get howToAddChannels => 'How to Add Channels';
+
+  @override
+  String get done => 'Done!';
 }

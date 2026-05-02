@@ -7,28 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:430709451697:android:b7b1ccf10f51f4d7e9eb90",
+        "mobilesdk_app_id": "1:430709451697:android:e28e1bee8e70fc14e9eb90",
         "android_client_info": {
-          "package_name": "com.example.iptv-player"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBG3Cj4vYj9G4_apUEkSuNU8qFegcgJNZw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:430709451697:android:4d9a3d501859e741e9eb90",
-        "android_client_info": {
-          "package_name": "com.kingmango.iptvplayer"
+          "package_name": "com.summershine.iptvplayer"
         }
       },
       "oauth_client": [],

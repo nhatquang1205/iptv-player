@@ -44,7 +44,273 @@ class _ListAllChannelsPageState extends State<ListAllChannelsPage> {
         widget.playlistId, query, filterType == 2, isResetPaging));
   }
 
+  void showHowToAddChannelsDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (context, scrollController) {
+            return Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.emptyPlaylistTitle,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: ListView(
+                      controller: scrollController,
+                      children: [
+                        _buildInstructionStep(
+                          context,
+                          1,
+                          AppLocalizations.of(context)!.emptyPlaylistStep1Title,
+                          AppLocalizations.of(context)!.emptyPlaylistStep1Desc,
+                        ),
+                        const SizedBox(height: 24),
+                        _buildInstructionStep(
+                          context,
+                          2,
+                          AppLocalizations.of(context)!.emptyPlaylistStep2Title,
+                          AppLocalizations.of(context)!.emptyPlaylistStep2Desc,
+                        ),
+                        const SizedBox(height: 24),
+                        _buildInstructionStep(
+                          context,
+                          3,
+                          AppLocalizations.of(context)!.emptyPlaylistStep3Title,
+                          AppLocalizations.of(context)!.emptyPlaylistStep3Desc,
+                        ),
+                        const SizedBox(height: 24),
+                        _buildInstructionStep(
+                          context,
+                          4,
+                          AppLocalizations.of(context)!.emptyPlaylistStep4Title,
+                          AppLocalizations.of(context)!.emptyPlaylistStep4Desc,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.done,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildInstructionStep(
+      BuildContext context, int number, String title, String description) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '$number',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                description,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildEmptyChannelState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Illustration
+          Container(
+            width: 250,
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Blue TV/Video card
+                Container(
+                  width: 200,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF4A90E2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.black, width: 3),
+                  ),
+                  child: Icon(
+                    Icons.play_arrow,
+                    size: 80,
+                    color: Colors.white,
+                  ),
+                ),
+                // Red heart
+                Positioned(
+                  top: 10,
+                  right: 40,
+                  child: Icon(
+                    Icons.favorite,
+                    size: 40,
+                    color: Colors.red,
+                  ),
+                ),
+                // Decorative elements
+                Positioned(
+                  top: 30,
+                  left: 20,
+                  child: Text(
+                    '+',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  right: 10,
+                  child: Text(
+                    '+',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+          // Message
+          Text(
+            AppLocalizations.of(context)!.emptyChannelMessage,
+            style: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+          const SizedBox(height: 24),
+          // Button
+          ElevatedButton.icon(
+            onPressed: () => showHowToAddChannelsDialog(context),
+            icon: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary),
+            label: Text(
+              AppLocalizations.of(context)!.howToAddChannels,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 1,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildListChannels(context, state) {
+    // Show empty state if no channels
+    if (state.channels.isEmpty && state.status != ChannelStatus.loading) {
+      return buildEmptyChannelState(context);
+    }
+
     return GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

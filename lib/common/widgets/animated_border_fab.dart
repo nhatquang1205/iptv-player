@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:iptv_player/common/constants/language_constants.dart';
 import 'package:iptv_player/presentation/home/add_playlist_menu.dart';
+import 'package:iptv_player/presentation/license/license_agreement_dialog.dart';
 
 class AnimatedBorderFab extends StatefulWidget {
   final VoidCallback? onBottomSheetClosed;
@@ -25,6 +27,41 @@ class _AnimatedBorderFabState extends State<AnimatedBorderFab>
   }
 
   void _openBottomSheet(BuildContext context) async {
+    // Check if license has been accepted
+    final licenseAccepted = await isLicenseAccepted();
+
+    if (!licenseAccepted && context.mounted) {
+      // Show license agreement dialog first
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: true,
+        builder: (BuildContext context) {
+          return DraggableScrollableSheet(
+            initialChildSize: 0.9,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            expand: false,
+            builder: (context, scrollController) {
+              return LicenseAgreementDialog(
+                onAccepted: () {
+                  // After accepting, open the add playlist menu
+                  if (context.mounted) {
+                    _openAddPlaylistMenu(context);
+                  }
+                },
+              );
+            },
+          );
+        },
+      );
+    } else if (context.mounted) {
+      // License already accepted, open menu directly
+      _openAddPlaylistMenu(context);
+    }
+  }
+
+  void _openAddPlaylistMenu(BuildContext context) async {
     await showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {

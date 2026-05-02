@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:iptv_player/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// COMMENTED OUT - TEMPORARILY DISABLED ADS
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:iptv_player/common/constants/language_constants.dart';
 import 'package:iptv_player/common/helpers/db_helper.dart';
 import 'package:iptv_player/common/theme/app_theme.dart';
@@ -11,7 +13,9 @@ import 'package:iptv_player/common/widgets/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(MobileAds.instance.initialize());
+  await Firebase.initializeApp();
+  // COMMENTED OUT - TEMPORARILY DISABLED ADS
+  // unawaited(MobileAds.instance.initialize());
   DBHelper db = DBHelper.instance;
   await db.initDB();
   runApp(const MyApp());

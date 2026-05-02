@@ -24,5 +24,18 @@
     "searchChannel": "Search channels",
     "recent": "Recent",
     "favorite": "Favorite",
-    "delete": "Xoá"
+    "delete": "Xoá",
+    "emptyPlaylistTitle": "How to add a playlist",
+    "emptyPlaylistStep1Title": "Find M3U playlist",
+    "emptyPlaylistStep1Desc": "Search for public IPTV playlists online (M3U)",
+    "emptyPlaylistStep2Title": "Copy link or download",
+    "emptyPlaylistStep2Desc": "Copy the playlist link or download the .m3u file",
+    "emptyPlaylistStep3Title": "Enter playlist into app",
+    "emptyPlaylistStep3Desc": "In app: Add playlist → Enter URL → Paste link",
+    "emptyPlaylistStep4Title": "Start watching",
+    "emptyPlaylistStep4Desc": "Open playlist and enjoy your channels",
+    "emptyPlaylistTerms": "When using this app, you agree to our Terms of Service",
+    "emptyChannelMessage": "There are no channels yet",
+    "howToAddChannels": "How to Add Channels",
+    "done": "Done!"
 }
